@@ -1,4 +1,4 @@
-from pieces import*
+import Enums, Piece
 import pygame
 class board:
  
@@ -8,6 +8,7 @@ class board:
         self.color2 = color2
         self.tileSize = tileSize
     def DrawBoard(self, window, leftSpace, topSpace):
+
         for i in range(self.tilesNumber):
             for g in range(self.tilesNumber):
                 if((i%2==0 and g%2==0) or i==g or (i%2!=0 and g%2!=0)):

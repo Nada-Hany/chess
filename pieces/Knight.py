@@ -1,1 +1,0 @@
-from pieces import Piece
