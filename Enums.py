@@ -10,6 +10,7 @@ class GameState(Enum):
     GAME_OVER = 2
     BLACK_WON = 3
     WHITE_WON = 4
+    NOTRUNNING = 5
 
 class PieceType(Enum):
     BISHOP = 0 
@@ -18,3 +19,5 @@ class PieceType(Enum):
     PAWN = 3
     KNIGHT = 4
     ROOK = 5
+
+
