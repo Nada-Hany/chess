@@ -16,13 +16,13 @@ board_obj.InitializePieces()
 moves[Enums.PieceType.BISHOP]
 
 while(gameStatus == Enums.GameState.RUNNING):
-    WINDOW.fill((0,0,0))
+    WINDOW.fill((90,50,30))
     board_obj.DrawBoard(WINDOW)
     board_obj.drawPieces(WINDOW, PNGOFFSETS)
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
          gameStatus = Enums.GameState.NOTRUNNING
-      if event.type == pygame.MOUSEBUTTONUP:
+      if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
          position = pygame.mouse.get_pos()
          board_obj.handlMovement(position)
     pygame.display.update()

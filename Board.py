@@ -2,7 +2,8 @@ import Enums, Piece, Cell
 import pygame
 import os
 class board:
- 
+    
+    pieceSelected = None 
     def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset):
         self.tilesNumber = tilesNumber
         self.color1 = color1
@@ -10,15 +11,30 @@ class board:
         self.xOffset = xOffset
         self.yOffset = yOffset
         self.tileSize = tileSize
+        self.blackDeadPieces =[]
+        self.whiteDeadPieces =[]
         self.cells = [[Cell.cell(xOffset + x*tileSize,yOffset + y*tileSize) for x in range(8)] for y in range(8)]
     def DrawBoard(self, window):
-
         for i in range(self.tilesNumber):
             for g in range(self.tilesNumber):
                 if((i + g) % 2 == 0):
                      pygame.draw.rect(window, self.color1, (g*self.tileSize +self.xOffset, i*self.tileSize+self.yOffset,self.tileSize, self.tileSize))
                 else:
                     pygame.draw.rect(window, self.color2, (g*self.tileSize +self.xOffset, i*self.tileSize+self.yOffset,self.tileSize, self.tileSize))
+        for deadPiece in self.blackDeadPieces:
+            deadPiece.image = pygame.transform.scale(deadPiece.image, (40, 40))
+            index = self.blackDeadPieces.index(deadPiece)
+            if(index > 12):
+                window.blit(deadPiece.image, (self.xOffset - 120, self.yOffset + (index - 13) * 50))
+            else:
+                window.blit(deadPiece.image, (self.xOffset - 60, self.yOffset + index * 50 ))
+        for deadPiece in self.whiteDeadPieces:
+            deadPiece.image = pygame.transform.scale(deadPiece.image, (40, 40))
+            index = self.whiteDeadPieces.index(deadPiece)
+            if(index > 12):
+                window.blit(deadPiece.image, (self.xOffset + self.tilesNumber*self.tileSize + 120,self.yOffset + (index - 13) * 50 ))
+            else:
+                window.blit(deadPiece.image, (self.xOffset + self.tilesNumber*self.tileSize + 20,self.yOffset + index * 50 ))
 
     def InitializePieces(self):
         BLACK, WHITE = Enums.Color.BLACK, Enums.Color.WHITE
@@ -112,13 +128,15 @@ class board:
     def drawPieces(self,window, pngOffsets):
         for cell in self.cells:
             for eachCell in cell:
-                if(eachCell.pieceInCell != None and eachCell.pieceInCell.isAlive == True):
+                if(eachCell.pieceInCell != None):
                   eachCell.drawPiece(window, pngOffsets)
 
     def handlMovement(self, position):
         # x -> col, y-> row
         x = (position[0] - self.xOffset) // self.tileSize
         y = (position[1] - self.yOffset) // self.tileSize
-        inCell = self.cells[y][x].pieceInCell
-        if(inCell != None):
-            inCell.GotSelected()
+        if(y in range(8) and x in range(8)):
+            inCell = self.cells[y][x].pieceInCell
+            if(inCell != None):
+                self.pieceSelected = inCell
+                inCell.GotSelected(self.blackDeadPieces, self.whiteDeadPieces, self.cells, x, y)
