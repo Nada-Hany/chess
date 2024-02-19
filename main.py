@@ -11,20 +11,23 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 gameStatus = Enums.GameState.RUNNING
 board_obj = Board.board(TILENUMBER,BLACK,WHITE, TILESIZE, X_OFFSET, Y_OFFSET)
-board_obj.DrawBoard(WINDOW)   
+board_obj.InitializePieces()
 
-# for cell in board_obj.cells:
-#    for eachCell in cell:
-#       if(eachCell.pieceInCell != None):
-#         print(eachCell.pieceInCell.getType() , eachCell.pieceInCell.getColor())
-board_obj.drawPieces(WINDOW, PNGOFFSETS)
+moves[Enums.PieceType.BISHOP]
+
 while(gameStatus == Enums.GameState.RUNNING):
+    WINDOW.fill((0,0,0))
+    board_obj.DrawBoard(WINDOW)
+    board_obj.drawPieces(WINDOW, PNGOFFSETS)
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
          gameStatus = Enums.GameState.NOTRUNNING
-    
+      if event.type == pygame.MOUSEBUTTONUP:
+         position = pygame.mouse.get_pos()
+         board_obj.handlMovement(position)
     pygame.display.update()
   
+
          
 
    
