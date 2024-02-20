@@ -1,9 +1,14 @@
 import Enums, Piece, Cell
+from move_logic import *
 import pygame
 import os
 class board:
-    
-    pieceSelected = None 
+    selectedPiece = None 
+    possibleMoves = []
+    blackDeadPieces = []
+    whiteDeadPieces = []
+    whiteTurn = True
+    whitePlayerMoved = False
     def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset):
         self.tilesNumber = tilesNumber
         self.color1 = color1
@@ -11,8 +16,6 @@ class board:
         self.xOffset = xOffset
         self.yOffset = yOffset
         self.tileSize = tileSize
-        self.blackDeadPieces =[]
-        self.whiteDeadPieces =[]
         self.cells = [[Cell.cell(xOffset + x*tileSize,yOffset + y*tileSize) for x in range(8)] for y in range(8)]
     def DrawBoard(self, window):
         for i in range(self.tilesNumber):
@@ -60,83 +63,119 @@ class board:
         white_rook_img = pygame.image.load(os.path.join('assets','white-rook.png'))
         
         black_rook_left = Piece.piece(BLACK, ROOK, True, False, black_rook_img)
-        self.cells[0][0].setPiece(black_rook_left)
+        self.cells[0][0].SetPiece(black_rook_left)
         black_rook_right = Piece.piece(BLACK, ROOK, True, False, black_rook_img)
-        self.cells[0][7].setPiece(black_rook_right)
+        self.cells[0][7].SetPiece(black_rook_right)
         black_knight_left = Piece.piece(BLACK, KNIGHT, True, False, black_knight_img)
-        self.cells[0][1].setPiece(black_knight_left)
+        self.cells[0][1].SetPiece(black_knight_left)
         black_knight_right = Piece.piece(BLACK, KNIGHT, True, False, black_knight_img)
-        self.cells[0][6].setPiece(black_knight_right)
+        self.cells[0][6].SetPiece(black_knight_right)
         black_bishop_left = Piece.piece(BLACK, BISHOP, True, False, black_bishp_img)
-        self.cells[0][2].setPiece(black_bishop_left)
+        self.cells[0][2].SetPiece(black_bishop_left)
         black_bishop_right = Piece.piece(BLACK, BISHOP, True, False, black_bishp_img)
-        self.cells[0][5].setPiece(black_bishop_right)
+        self.cells[0][5].SetPiece(black_bishop_right)
         black_queen = Piece.piece(BLACK, QUEEN, True, False, black_queen_img)
-        self.cells[0][3].setPiece(black_queen)
+        self.cells[0][3].SetPiece(black_queen)
         black_king = Piece.piece(BLACK, KING, True, False, black_king_img)
-        self.cells[0][4].setPiece(black_king)
+        self.cells[0][4].SetPiece(black_king)
         black_pawn1 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][0].setPiece(black_pawn1)
+        self.cells[1][0].SetPiece(black_pawn1)
         black_pawn2 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][1].setPiece(black_pawn2)
+        self.cells[1][1].SetPiece(black_pawn2)
         black_pawn3 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][2].setPiece(black_pawn3)
+        self.cells[1][2].SetPiece(black_pawn3)
         black_pawn4 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][3].setPiece(black_pawn4)
+        self.cells[1][3].SetPiece(black_pawn4)
         black_pawn5 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][4].setPiece(black_pawn5)
+        self.cells[1][4].SetPiece(black_pawn5)
         black_pawn6 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][5].setPiece(black_pawn6)
+        self.cells[1][5].SetPiece(black_pawn6)
         black_pawn7 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][6].setPiece(black_pawn7)
+        self.cells[1][6].SetPiece(black_pawn7)
         black_pawn8 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
-        self.cells[1][7].setPiece(black_pawn8)
+        self.cells[1][7].SetPiece(black_pawn8)
 
         white_rook_left = Piece.piece(WHITE, ROOK, True, False, white_rook_img)
-        self.cells[7][0].setPiece(white_rook_left)
+        self.cells[7][0].SetPiece(white_rook_left)
         white_rook_right = Piece.piece(WHITE, ROOK, True, False, white_rook_img)
-        self.cells[7][7].setPiece(white_rook_right)
+        self.cells[7][7].SetPiece(white_rook_right)
         white_knight_left = Piece.piece(WHITE, KNIGHT, True, False, white_knight_img)
-        self.cells[7][1].setPiece(white_knight_left)
+        self.cells[7][1].SetPiece(white_knight_left)
         white_knight_right = Piece.piece(WHITE, KNIGHT, True, False, white_knight_img)
-        self.cells[7][6].setPiece(white_knight_right)
+        self.cells[7][6].SetPiece(white_knight_right)
         white_bishop_left = Piece.piece(WHITE, BISHOP, True, False, white_bishp_img)
-        self.cells[7][2].setPiece(white_bishop_left)
+        self.cells[7][2].SetPiece(white_bishop_left)
         white_bishop_right = Piece.piece(WHITE, BISHOP, True, False, white_bishp_img)
-        self.cells[7][5].setPiece(white_bishop_right)
+        self.cells[7][5].SetPiece(white_bishop_right)
         white_queen = Piece.piece(WHITE, QUEEN, True, False, white_queen_img)
-        self.cells[7][3].setPiece(white_queen)
+        self.cells[7][3].SetPiece(white_queen)
         white_king = Piece.piece(WHITE, KING, True, False, white_king_img)
-        self.cells[7][4].setPiece(white_king)
+        self.cells[7][4].SetPiece(white_king)
         white_pawn1 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][0].setPiece(white_pawn1)
+        self.cells[6][0].SetPiece(white_pawn1)
         white_pawn2 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][1].setPiece(white_pawn2)
+        self.cells[6][1].SetPiece(white_pawn2)
         white_pawn3 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][2].setPiece(white_pawn3)
+        self.cells[6][2].SetPiece(white_pawn3)
         white_pawn4 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][3].setPiece(white_pawn4)
+        self.cells[6][3].SetPiece(white_pawn4)
         white_pawn5 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][4].setPiece(white_pawn5)
+        self.cells[6][4].SetPiece(white_pawn5)
         white_pawn6 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][5].setPiece(white_pawn6)
+        self.cells[6][5].SetPiece(white_pawn6)
         white_pawn7 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][6].setPiece(white_pawn7)
+        self.cells[6][6].SetPiece(white_pawn7)
         white_pawn8 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
-        self.cells[6][7].setPiece(white_pawn8)
+        self.cells[6][7].SetPiece(white_pawn8)
 
-    def drawPieces(self,window, pngOffsets):
+    def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
             for eachCell in cell:
                 if(eachCell.pieceInCell != None):
-                  eachCell.drawPiece(window, pngOffsets)
+                  eachCell.DrawPiece(window, pngOffsets)
+        if(self.selectedPiece != None):
+            for cell in self.possibleMoves:
+                self.DrawMove(window, cell.x, cell.y)
 
-    def handlMovement(self, position):
+    def DrawMove(self, window, x, y):
+        pygame.draw.rect(window, (200, 0, 0), (x + 2, y + 2, 76, 76), 4)
+
+    def HandlMovement(self, position):
         # x -> col, y-> row
         x = (position[0] - self.xOffset) // self.tileSize
         y = (position[1] - self.yOffset) // self.tileSize
         if(y in range(8) and x in range(8)):
             inCell = self.cells[y][x].pieceInCell
             if(inCell != None):
-                self.pieceSelected = inCell
-                inCell.GotSelected(self.blackDeadPieces, self.whiteDeadPieces, self.cells, x, y)
+                if(self.whiteTurn and inCell.color == Enums.Color.WHITE):
+                    self.cells[y][x].pieceInCell.previousX = y
+                    self.cells[y][x].pieceInCell.previousY = x
+                    self.selectedPiece = inCell
+                    self.possibleMoves.clear()
+                    moves[inCell.type](self.cells, x, y)
+                    inCell.GotSelected(self.blackDeadPieces, self.whiteDeadPieces, self.cells, x, y)
+                elif(not self.whiteTurn and inCell.color == Enums.Color.BLACK):
+                    self.cells[y][x].pieceInCell.previousX = y
+                    self.cells[y][x].pieceInCell.previousY = x
+                    self.selectedPiece = inCell
+                    self.possibleMoves.clear()
+                    moves[inCell.type](self.cells, x, y)
+                    inCell.GotSelected(self.blackDeadPieces, self.whiteDeadPieces, self.cells, x, y)
+
+            else:
+                if(self.selectedPiece != None):
+                    for cell in self.possibleMoves:
+                        if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
+                            if(self.cells[y][x].pieceInCell == None):
+                                # move
+                                if(self.whiteTurn):
+                                    self.whiteTurn = False
+                                else:
+                                    self.whiteTurn = True
+                                self.cells[y][x].pieceInCell = self.selectedPiece
+                                self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
+                                self.selectedPiece = None
+                            #     pass
+                            # elif(self.cells[y][x].pieceInCell.color != self.selectedPiece.color):
+                            #     # kill enemy
+                            #     pass
