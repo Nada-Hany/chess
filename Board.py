@@ -147,27 +147,35 @@ class board:
         if(y in range(8) and x in range(8)):
             inCell = self.cells[y][x].pieceInCell
             if(inCell != None):
-                if(self.whiteTurn and inCell.color == Enums.Color.WHITE):
-                    self.cells[y][x].pieceInCell.previousX = y
-                    self.cells[y][x].pieceInCell.previousY = x
-                    self.selectedPiece = inCell
-                    self.possibleMoves.clear()
-                    moves[inCell.type](self.cells, x, y)
-                    inCell.GotSelected(self.blackDeadPieces, self.whiteDeadPieces, self.cells, x, y)
-                elif(not self.whiteTurn and inCell.color == Enums.Color.BLACK):
-                    self.cells[y][x].pieceInCell.previousX = y
-                    self.cells[y][x].pieceInCell.previousY = x
-                    self.selectedPiece = inCell
-                    self.possibleMoves.clear()
-                    moves[inCell.type](self.cells, x, y)
-                    inCell.GotSelected(self.blackDeadPieces, self.whiteDeadPieces, self.cells, x, y)
-
+                # kill enemy
+                if(self.selectedPiece != None):
+                    for cell in self.possibleMoves:
+                        if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
+                            if(self.cells[y][x].pieceInCell.color != self.selectedPiece.color):
+                                if(self.selectedPiece.color == Enums.Color.WHITE):
+                                    self.blackDeadPieces.append(self.cells[y][x].pieceInCell)
+                                    self.whiteTurn = False
+                                else:
+                                    self.whiteDeadPieces.append(self.cells[y][x].pieceInCell)
+                                    self.whiteTurn = True
+                                self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
+                                self.cells[y][x].pieceInCell = self.selectedPiece
+                                self.selectedPiece = None
+                # selecting a piece 
+                else:
+                    if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
+                        self.cells[y][x].pieceInCell.previousX = y
+                        self.cells[y][x].pieceInCell.previousY = x
+                        self.selectedPiece = inCell
+                        self.possibleMoves.clear()
+                        moves[inCell.type](self.cells, x, y)
             else:
                 if(self.selectedPiece != None):
                     for cell in self.possibleMoves:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
+                            # move
                             if(self.cells[y][x].pieceInCell == None):
-                                # move
+                                # for taking turns
                                 if(self.whiteTurn):
                                     self.whiteTurn = False
                                 else:
@@ -175,7 +183,4 @@ class board:
                                 self.cells[y][x].pieceInCell = self.selectedPiece
                                 self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
                                 self.selectedPiece = None
-                            #     pass
-                            # elif(self.cells[y][x].pieceInCell.color != self.selectedPiece.color):
-                            #     # kill enemy
-                            #     pass
+                                

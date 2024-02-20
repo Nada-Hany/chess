@@ -21,8 +21,10 @@ def move_pawn(cells, x, y):
         if((y-1) in range (8) and cells[y-1][x].pieceInCell == None):
             Board.board.possibleMoves.append(cells[y-1][x])
 
-def move_bishop(cells, x, y):
-    print("bishop")
+# def move_bishop(cells, x, y):
+#     if(cells[y][x].pieceInCell.color == Enums.Color.BLACK):
+
+#     else:
 
     
 def move_king(cells, x, y):

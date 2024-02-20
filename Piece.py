@@ -13,15 +13,15 @@ class piece:
     #     pass
     def getType(self):
         return self.type
-    def GotSelected(self, blackList, whiteList, cells, x, y):
-        if(self.isSelected == False):
-            # showing all possible moves
-            self.isSelected = True
-        else:
-            print("true")
-            # self.isSelected = False
-            # self.isAlive = False
-            # self.Die(blackList, whiteList, cells, x, y)
+    # def GotSelected(self, blackList, whiteList, cells, x, y):
+    #     if(self.isSelected == False):
+    #         # showing all possible moves
+    #         self.isSelected = True
+    #     else:
+    #         print("true")
+    #         # self.isSelected = False
+    #         # self.isAlive = False
+    #         # self.Die(blackList, whiteList, cells, x, y)
     
     def Die(self, blackList, whiteList, cells, x, y):
         cells[y][x].pieceInCell = None
