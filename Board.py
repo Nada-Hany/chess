@@ -127,7 +127,14 @@ class board:
         self.cells[6][6].SetPiece(white_pawn7)
         white_pawn8 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
         self.cells[6][7].SetPiece(white_pawn8)
-
+    
+    def setSelectedPiece(self, x, y, piece):
+        self.cells[y][x].pieceInCell.previousX = y
+        self.cells[y][x].pieceInCell.previousY = x
+        self.selectedPiece = piece
+        self.possibleMoves.clear()
+        moves[piece.type](self.cells, x, y, self.selectedPiece)
+        
     def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
             for eachCell in cell:
@@ -146,11 +153,16 @@ class board:
         y = (position[1] - self.yOffset) // self.tileSize
         if(y in range(8) and x in range(8)):
             inCell = self.cells[y][x].pieceInCell
+            # if chosen cell is not empty
             if(inCell != None):
-                # kill enemy
                 if(self.selectedPiece != None):
+                    # changing the selected piece 
+                    if(self.cells[y][x].pieceInCell.color == self.selectedPiece.color):
+                        self.setSelectedPiece(x, y, self.cells[y][x].pieceInCell)
+                    # moving the selected piece to a valid position
                     for cell in self.possibleMoves:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
+                            # kill enemy
                             if(self.cells[y][x].pieceInCell.color != self.selectedPiece.color):
                                 if(self.selectedPiece.color == Enums.Color.WHITE):
                                     self.blackDeadPieces.append(self.cells[y][x].pieceInCell)
@@ -164,13 +176,12 @@ class board:
                 # selecting a piece 
                 else:
                     if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
-                        self.cells[y][x].pieceInCell.previousX = y
-                        self.cells[y][x].pieceInCell.previousY = x
-                        self.selectedPiece = inCell
-                        self.possibleMoves.clear()
-                        moves[inCell.type](self.cells, x, y)
+                        self.setSelectedPiece(x, y, inCell)
             else:
+                # selected a piece and its time to move it
                 if(self.selectedPiece != None):
+                    if(len(self.possibleMoves) == 0):
+                        self.selectedPiece = None
                     for cell in self.possibleMoves:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                             # move
@@ -183,4 +194,6 @@ class board:
                                 self.cells[y][x].pieceInCell = self.selectedPiece
                                 self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
                                 self.selectedPiece = None
+       
+                    
                                 
