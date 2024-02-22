@@ -64,7 +64,41 @@ def move_bishop(cells, x, y, selectedPiece):
             break
     
 def move_king(cells, x, y, selectedPiece):
-    print("pawn")
+    if((y-1)in range(8) and (x+1) in range(8) and cells[y-1][x+1].pieceInCell != None and cells[y-1][x+1].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y-1][x+1])
+    if((y+1)in range(8) and (x+1) in range(8) and cells[y+1][x+1].pieceInCell != None and cells[y+1][x+1].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y+1][x+1])
+    if((y+1)in range(8) and (x-1) in range(8) and cells[y+1][x-1].pieceInCell != None and cells[y+1][x-1].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y+1][x-1])
+    if((y-1)in range(8) and (x-1) in range(8) and cells[y-1][x-1].pieceInCell != None and cells[y-1][x-1].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y-1][x-1])
+
+    if((y-1)in range(8) and cells[y-1][x].pieceInCell != None and cells[y-1][x].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y-1][x])
+    if((y+1)in range(8) and cells[y+1][x].pieceInCell != None and cells[y+1][x].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y+1][x])
+    if((x-1) in range(8) and cells[y][x-1].pieceInCell != None and cells[y][x-1].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y][x-1])
+    if((x+1) in range(8) and cells[y][x+1].pieceInCell != None and cells[y][x+1].pieceInCell.color != selectedPiece.color):
+        Board.board.possibleMoves.append(cells[y][x+1])
+
+    if((y+1) in range (8) and cells[y+1][x].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y+1][x])
+    if((y-1) in range (8) and cells[y-1][x].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y-1][x])
+    if((x+1) in range (8) and cells[y][x+1].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y][x+1])
+    if((x-1) in range (8) and cells[y][x-1].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y][x-1])
+
+    if((y+1) in range (8) and (x+1) in range(8) and cells[y+1][x+1].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y+1][x+1])
+    if((y-1) in range (8) and (x-1) in range(8) and cells[y-1][x-1].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y-1][x-1])
+    if((y-1) in range(8) and (x+1) in range (8) and cells[y-1][x+1].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y-1][x+1])
+    if((y+1) in range(8) and (x-1) in range (8) and cells[y+1][x-1].pieceInCell == None):
+        Board.board.possibleMoves.append(cells[y+1][x-1])
 
 def move_queen(cells, x, y, selectedPiece):
     print("pawn")
