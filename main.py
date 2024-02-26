@@ -17,8 +17,6 @@ gameStatus = Enums.GameState.RUNNING
 board_obj = Board.board(TILENUMBER,BLACK,WHITE, TILESIZE, X_OFFSET, Y_OFFSET, WINDOW, WIDTH, HEIGHT)
 board_obj.InitializePieces()
 
-
-
 while(gameStatus == Enums.GameState.RUNNING):
    WINDOW.fill((90,50,30))
    board_obj.DrawBoard(WINDOW)
@@ -28,7 +26,8 @@ while(gameStatus == Enums.GameState.RUNNING):
          gameStatus = Enums.GameState.NOTRUNNING
       if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
          position = pygame.mouse.get_pos()
-         board_obj.HandlMovement(position)
+         if(board_obj.gameOver == None):
+            board_obj.HandlMovement(position)
    if board_obj.gameOver == True:
       DrawGameOver(WINDOW, WIDTH, HEIGHT, "white wins!")
    elif board_obj.gameOver == False:

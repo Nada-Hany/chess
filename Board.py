@@ -139,6 +139,7 @@ class board:
         self.selectedPiece = piece
         self.possibleMoves.clear()
         moves[piece.type](self.cells, x, y, self.selectedPiece)
+        CheckForCastleMoves(self.selectedPiece, x, y, self.cells)
         
     def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
@@ -156,6 +157,7 @@ class board:
         # x -> col, y-> row
         x = (position[0] - self.xOffset) // self.tileSize
         y = (position[1] - self.yOffset) // self.tileSize
+        print(self.possibleMoves)
         if(y in range(8) and x in range(8)):
             inCell = self.cells[y][x].pieceInCell
             # if chosen cell is not empty
@@ -173,14 +175,16 @@ class board:
                                     self.blackDeadPieces.append(self.cells[y][x].pieceInCell)
                                 else:
                                     self.whiteDeadPieces.append(self.cells[y][x].pieceInCell)
+                                    self.whiteTurn = True
                                 self.gameOver = CheckForGameOver(self.cells[y][x].pieceInCell)
                                 self.movePiece(y, x)
                 # selecting a piece 
                 else:
                     if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
                         self.setSelectedPiece(x, y, inCell)
+
             else:
-                # selected a piece and its time to move it
+                # a piece is selected and its time to move it
                 if(self.selectedPiece != None):
                     if(len(self.possibleMoves) == 0):
                         self.selectedPiece = None
@@ -197,4 +201,5 @@ class board:
             self.whiteTurn = True
         self.cells[y][x].pieceInCell = self.selectedPiece
         self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
+        self.selectedPiece.Moved()
         self.selectedPiece = None
