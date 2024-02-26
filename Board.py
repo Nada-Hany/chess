@@ -1,5 +1,6 @@
 import Enums, Piece, Cell
 from move_logic import *
+from game_events import *
 import pygame
 import os
 class board:
@@ -9,13 +10,17 @@ class board:
     whiteDeadPieces = []
     whiteTurn = True
     whitePlayerMoved = False
-    def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset):
+    gameOver = None
+    def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset, window, width, height):
         self.tilesNumber = tilesNumber
+        self.window = window
         self.color1 = color1
         self.color2 = color2
         self.xOffset = xOffset
         self.yOffset = yOffset
         self.tileSize = tileSize
+        self.width = width
+        self.height = height
         self.cells = [[Cell.cell(xOffset + x*tileSize,yOffset + y*tileSize) for x in range(8)] for y in range(8)]
     def DrawBoard(self, window):
         for i in range(self.tilesNumber):
@@ -166,13 +171,10 @@ class board:
                             if(self.cells[y][x].pieceInCell.color != self.selectedPiece.color):
                                 if(self.selectedPiece.color == Enums.Color.WHITE):
                                     self.blackDeadPieces.append(self.cells[y][x].pieceInCell)
-                                    self.whiteTurn = False
                                 else:
                                     self.whiteDeadPieces.append(self.cells[y][x].pieceInCell)
-                                    self.whiteTurn = True
-                                self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
-                                self.cells[y][x].pieceInCell = self.selectedPiece
-                                self.selectedPiece = None
+                                self.gameOver = CheckForGameOver(self.cells[y][x].pieceInCell)
+                                self.movePiece(y, x)
                 # selecting a piece 
                 else:
                     if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
@@ -186,14 +188,13 @@ class board:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                             # move
                             if(self.cells[y][x].pieceInCell == None):
-                                # for taking turns
-                                if(self.whiteTurn):
-                                    self.whiteTurn = False
-                                else:
-                                    self.whiteTurn = True
-                                self.cells[y][x].pieceInCell = self.selectedPiece
-                                self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
-                                self.selectedPiece = None
-       
-                    
-                                
+                                self.movePiece(y, x)
+
+    def movePiece(self, y, x):
+        if(self.whiteTurn):
+            self.whiteTurn = False
+        else:
+            self.whiteTurn = True
+        self.cells[y][x].pieceInCell = self.selectedPiece
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
+        self.selectedPiece = None

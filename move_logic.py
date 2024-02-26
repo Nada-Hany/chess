@@ -229,8 +229,6 @@ def move_knight(cells, x, y, selectedPiece):
             if(cells[y+1][x+2].pieceInCell.color != selectedPiece.color):
                 Board.board.possibleMoves.append(cells[y+1][x+2])
                     
-
-
 moves = {
     Enums.PieceType.PAWN : move_pawn,
     Enums.PieceType.BISHOP : move_bishop,

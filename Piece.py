@@ -8,8 +8,8 @@ class piece:
         self.image = image
         self.previousX = -1
         self.previousY = -1
-    
-    # def canMove(self, x, y):
+
+    # def canMove(self, x, y):      
     #     pass
     def getType(self):
         return self.type
