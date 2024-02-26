@@ -1,8 +1,5 @@
 import Enums
 class piece:
-    moved = False
-    king_can_castle_left = False
-    rook_can_castle = False
     def __init__(self, color:Enums.Color, type, isAlive = True, isSelected = False, image = None):
         self.color = color
         self.isAlive = isAlive
@@ -10,9 +7,12 @@ class piece:
         self.type = type 
         self.image = image
         self.previousX = -1
-        self.previousY = -1
-    
-    def FirstMove(self):
+        self.previousY = -1    
+        self.moved = False
+        self.canCastle = False
+        self.possibleMoves = []
+
+    def Moved(self):
         self.moved = True
 
     def Die(self, blackList, whiteList, cells, x, y):

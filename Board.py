@@ -157,14 +157,14 @@ class board:
         # x -> col, y-> row
         x = (position[0] - self.xOffset) // self.tileSize
         y = (position[1] - self.yOffset) // self.tileSize
-        print(self.possibleMoves)
         if(y in range(8) and x in range(8)):
             inCell = self.cells[y][x].pieceInCell
             # if chosen cell is not empty
             if(inCell != None):
                 if(self.selectedPiece != None):
                     # changing the selected piece 
-                    if(self.cells[y][x].pieceInCell.color == self.selectedPiece.color):
+                    if(self.cells[y][x].pieceInCell.color == self.selectedPiece.color and 
+                       not self.selectedPiece.canCastle):
                         self.setSelectedPiece(x, y, self.cells[y][x].pieceInCell)
                     # moving the selected piece to a valid position
                     for cell in self.possibleMoves:
@@ -175,9 +175,12 @@ class board:
                                     self.blackDeadPieces.append(self.cells[y][x].pieceInCell)
                                 else:
                                     self.whiteDeadPieces.append(self.cells[y][x].pieceInCell)
-                                    self.whiteTurn = True
                                 self.gameOver = CheckForGameOver(self.cells[y][x].pieceInCell)
                                 self.movePiece(y, x)
+                            # casteling
+                            else:
+                                if(self.selectedPiece.canCastle):
+                                    self.moveCastle(y, x)
                 # selecting a piece 
                 else:
                     if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
@@ -195,11 +198,22 @@ class board:
                                 self.movePiece(y, x)
 
     def movePiece(self, y, x):
+        self.cells[y][x].pieceInCell = self.selectedPiece
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
+        self.Move()
+        
+    def Move(self):
         if(self.whiteTurn):
             self.whiteTurn = False
         else:
             self.whiteTurn = True
-        self.cells[y][x].pieceInCell = self.selectedPiece
-        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         self.selectedPiece.Moved()
         self.selectedPiece = None
+
+    def moveCastle(self, y, x):
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell.Moved()
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = self.cells[y][x].pieceInCell
+        self.cells[y][x].pieceInCell = self.selectedPiece
+        self.selectedPiece.canCastle = False
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell.canCastle = False
+        self.Move()

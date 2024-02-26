@@ -1,4 +1,4 @@
-import Piece, Enums, Board
+import Piece, Enums, Board, Cell
 import pygame
 # not checkmate
 
@@ -36,43 +36,39 @@ def CheckForCastleMoves(piece, x, y, cells):
         for i in range(x+1, 7):
             if(cells[y][i].pieceInCell != None):
                 empty = False
-        if empty:
-            if(cells[y][rightCol].pieceInCell != None and cells[y][rightCol].pieceInCell.type == Enums.PieceType.ROOK and 
-                cells[y][rightCol].pieceInCell.moved == False):
-                Board.board.possibleMoves.append(cells[y][rightCol])
-                piece.king_can_castle_right = True
-                print("in 1")
+        KingCastle(empty, piece, rightCol, y, cells)
         empty = True
         # left rook....(king)
-        for i in range(0, x):
+        for i in range(1, x):
             if(cells[y][i].pieceInCell != None):
                 empty = False
-        if empty:
-            if(cells[y][leftCol].pieceInCell != None and cells[y][leftCol].pieceInCell.type == Enums.PieceType.ROOK and 
-                cells[y][leftCol].pieceInCell.moved == False):
-                print("in 2")
-                Board.board.possibleMoves.append(cells[y][leftCol])
-                piece.king_can_castle_left = True
+        KingCastle(empty, piece, leftCol, y, cells)
     elif(piece.type == Enums.PieceType.ROOK and piece.moved == False):
         empty = True
         # (left rook)......king
-        if(y == 0):
-            for i in range(0, middleCol):
+        if x == 0:
+            for i in range(1, middleCol):
                 if(cells[y][i].pieceInCell != None):
                     empty = False
-            if empty:
-                if(cells[y][middleCol].pieceInCell != None and cells[y][middleCol].pieceInCell.type == Enums.PieceType.KING
-                   and cells[y][middleCol].pieceInCell.moved == False):
-                   Board.board.possibleMoves.append(cells[y][middleCol])
-                   piece.rook_can_castle = True
-        # king ......(right king)
+            RookCastle(empty, piece, middleCol, y, cells)
+        # king ......(right rook)
         else:
             empty = True
             for i in range(middleCol+1, 7):
                 if(cells[y][i].pieceInCell != None):
                     empty = False
-            if empty:
-                if(cells[y][middleCol].pieceInCell != None and cells[y][middleCol].pieceInCell.type == Enums.PieceType.KING
-                   and cells[y][middleCol].pieceInCell.moved == False):
-                   Board.board.possibleMoves.append(cells[y][middleCol])
-                   piece.rook_can_castle = True
+            RookCastle(empty, piece, middleCol, y, cells)
+
+def RookCastle(empty, piece:Piece.piece, middleCol, y, cells):
+    if empty:
+        if(cells[y][middleCol].pieceInCell != None and cells[y][middleCol].pieceInCell.type == Enums.PieceType.KING
+            and cells[y][middleCol].pieceInCell.moved == False):
+            Board.board.possibleMoves.append(cells[y][middleCol])
+            piece.canCastle = True
+
+def KingCastle(empty, piece: Piece.piece, col, y, cells):
+    if empty:
+            if(cells[y][col].pieceInCell != None and cells[y][col].pieceInCell.type == Enums.PieceType.ROOK and 
+                cells[y][col].pieceInCell.moved == False):
+                Board.board.possibleMoves.append(cells[y][col])
+                piece.canCastle = True
