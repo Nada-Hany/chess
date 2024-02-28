@@ -1,4 +1,4 @@
-import Enums, os, pygame
+import Enums, pygame, os
 class piece:
 
     def __init__(self, color:Enums.Color, type, isAlive = True, isSelected = False, image = None):
@@ -10,8 +10,8 @@ class piece:
         self.previousX = -1
         self.previousY = -1    
         self.moved = False
-        self.possibleMoves = []
         self.canCastle = False
+        self.possibleMoves = []
 
         self.leftRookCastleX = 3
         self.rightRookCastleX = 5
@@ -19,9 +19,6 @@ class piece:
         self.kingCastleLeftX = 2
         self.initialX = -1
         self.initialY = -1
-
-    def __init__(self):
-        self.canCastle = False
 
     def SetInitialCor(self, x, y):
         self.initialX = x
@@ -41,7 +38,12 @@ class piece:
             blackList.append(self)
         else:
             whiteList.append(self)
-        
+            
+    def SetBasicsForPromotion(self, color:Enums.Color, type:Enums.PieceType):
+        self.color = color
+        self.type = type
+        self.PromotePawn[type]
+
     def SetBishop(self, color):
         BISHOP = Enums.PieceType.BISHOP
 

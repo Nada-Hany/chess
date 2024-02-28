@@ -8,6 +8,7 @@ class cell:
 
     def SetPiece(self, pieceInCell : Piece):
         self.pieceInCell = pieceInCell
+   
     def SetXY(self, x, y):
         self.x = x
         self.y = y

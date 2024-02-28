@@ -5,6 +5,7 @@ import pygame
 import os
 
 class board:
+    
     selectedPiece = None 
     pawnInPromotion = None
     possibleMoves = []
@@ -13,7 +14,8 @@ class board:
     whiteTurn = True
     whitePlayerMoved = False
     gameOver = None
-
+    pawnToBePromoted = None
+    
     def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset, window, width, height):
         self.tilesNumber = tilesNumber
         self.window = window
@@ -25,9 +27,8 @@ class board:
         self.width = width
         self.height = height
         self.pawnPromotion = False
-        self.pawnColor = None
         self.cells = [[Cell.cell(xOffset + x*tileSize,yOffset + y*tileSize) for x in range(8)] for y in range(8)]
-  
+    
     def DrawBoard(self, window):
         for i in range(self.tilesNumber):
             for g in range(self.tilesNumber):
@@ -72,17 +73,17 @@ class board:
         white_knight_img = pygame.image.load(os.path.join('assets','white-knight.png'))
         white_queen_img = pygame.image.load(os.path.join('assets','white-queen.png'))
         white_rook_img = pygame.image.load(os.path.join('assets','white-rook.png'))
-        
+
         black_rook_left = Piece.piece(BLACK, ROOK, True, False, black_rook_img)
-        black_rook_left.SetInitialCor(0, 0)
         self.cells[0][0].SetPiece(black_rook_left)
         black_rook_right = Piece.piece(BLACK, ROOK, True, False, black_rook_img)
-        black_rook_right.SetInitialCor(0, 7)
         self.cells[0][7].SetPiece(black_rook_right)
         black_knight_left = Piece.piece(BLACK, KNIGHT, True, False, black_knight_img)
         self.cells[0][1].SetPiece(black_knight_left)
+        black_rook_left.SetInitialCor(0, 0)
         black_knight_right = Piece.piece(BLACK, KNIGHT, True, False, black_knight_img)
         self.cells[0][6].SetPiece(black_knight_right)
+        black_rook_right.SetInitialCor(0, 7)
         black_bishop_left = Piece.piece(BLACK, BISHOP, True, False, black_bishp_img)
         self.cells[0][2].SetPiece(black_bishop_left)
         black_bishop_right = Piece.piece(BLACK, BISHOP, True, False, black_bishp_img)
@@ -90,8 +91,8 @@ class board:
         black_queen = Piece.piece(BLACK, QUEEN, True, False, black_queen_img)
         self.cells[0][3].SetPiece(black_queen)
         black_king = Piece.piece(BLACK, KING, True, False, black_king_img)
-        black_king.SetInitialCor(0, 4)
         self.cells[0][4].SetPiece(black_king)
+        black_king.SetInitialCor(0, 4)
         black_pawn1 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
         self.cells[1][0].SetPiece(black_pawn1)
         black_pawn2 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
@@ -110,11 +111,11 @@ class board:
         self.cells[1][7].SetPiece(black_pawn8)
 
         white_rook_left = Piece.piece(WHITE, ROOK, True, False, white_rook_img)
-        white_rook_left.SetInitialCor(7, 0)
         self.cells[7][0].SetPiece(white_rook_left)
+        white_rook_left.SetInitialCor(7, 0)
         white_rook_right = Piece.piece(WHITE, ROOK, True, False, white_rook_img)
-        white_rook_right.SetInitialCor(7, 7)
         self.cells[7][7].SetPiece(white_rook_right)
+        white_rook_right.SetInitialCor(7, 7)
         white_knight_left = Piece.piece(WHITE, KNIGHT, True, False, white_knight_img)
         self.cells[7][1].SetPiece(white_knight_left)
         white_knight_right = Piece.piece(WHITE, KNIGHT, True, False, white_knight_img)
@@ -126,8 +127,8 @@ class board:
         white_queen = Piece.piece(WHITE, QUEEN, True, False, white_queen_img)
         self.cells[7][3].SetPiece(white_queen)
         white_king = Piece.piece(WHITE, KING, True, False, white_king_img)
-        white_king.SetInitialCor(7, 4)
         self.cells[7][4].SetPiece(white_king)
+        white_king.SetInitialCor(7, 4)
         white_pawn1 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
         self.cells[6][0].SetPiece(white_pawn1)
         white_pawn2 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
@@ -207,9 +208,12 @@ class board:
                             # move
                             if(self.cells[y][x].pieceInCell == None):
                                 self.MovePiece(y, x)
-
+   
     def MovePiece(self, y, x):
         self.cells[y][x].pieceInCell = self.selectedPiece
+        CheckForPawnPromoption(self.selectedPiece, y, self)
+        if self.pawnPromotion:
+            self.pawnToBePromoted = self.selectedPiece
         self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         CheckForPawnPromoption(self.selectedPiece, y, self)
         if(self.pawnPromotion):

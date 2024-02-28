@@ -16,7 +16,6 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 running = True
 board_obj = Board.board(TILENUMBER,BLACK,WHITE, TILESIZE, X_OFFSET, Y_OFFSET, WINDOW, WIDTH, HEIGHT)
 board_obj.InitializePieces()
-
 clock = pygame.time.Clock()
 FPS = 60
 
@@ -32,9 +31,12 @@ while running:
          position = pygame.mouse.get_pos()
          if(board_obj.gameOver == None and not board_obj.pawnPromotion):
             board_obj.HandlMovement(position)
-         elif board_obj.gameOver == None and board_obj.pawnPromotion:
-            pass
-   # true if white wins
+         # checking gor pawn promotion selection
+         elif (board_obj.gameOver == None and board_obj.pawnPromotion):
+               
+               HandlPromotionSelection(position, WIDTH//2-320//2, HEIGHT//2-80//2, 80, board_obj)
+   if board_obj.pawnPromotion:
+      DrawPossiblePromotion(WINDOW, board_obj.pawnToBePromoted.color, WIDTH, HEIGHT)
    if board_obj.gameOver == True:
       DrawGameOver(WINDOW, WIDTH, HEIGHT, "white wins!")
    elif board_obj.gameOver == False:

@@ -1,5 +1,5 @@
 import Piece, Enums, Board
-import pygame
+import pygame, os
 # not checkmate
 
 def CheckForGameOver(deadPiece):
@@ -31,7 +31,6 @@ def DrawPlayerTurn(window, width, whiteTurn):
 def CheckForCastleMoves(piece, x, y, cells):
     empty = True
     rightCol = 7; leftCol = 0; middleCol = 4
-    piece.castleY = y
     if(piece.type == Enums.PieceType.KING and piece.moved == False):
         # (king)...right rook
         for i in range(x+1, 7):
@@ -74,44 +73,41 @@ def KingCastle(empty, piece: Piece.piece, col, y, cells):
                 Board.board.possibleMoves.append(cells[y][col])
                 piece.canCastle = True
 
-def CheckForPawnPromoption(piece:Piece.piece, y, boardObj:Board.board):   
+def CheckForPawnPromoption(piece:Piece.piece, y, boardObj):   
     if(piece.type == Enums.PieceType.PAWN and 
        piece.color == Enums.Color.BLACK):
         if(y == 7):
             boardObj.pawnPromotion = True
+
     elif(piece.type == Enums.PieceType.PAWN and 
             piece.color == Enums.Color.WHITE):
         if y == 0:
             boardObj.pawnPromotion = True 
 
 def SetPossiblePromotions(color):
-    BISHOP =Enums.PieceType.BISHOP
-    QUEEN = Enums.PieceType.QUEEN 
-    KNIGHT = Enums.PieceType.KNIGHT 
-    ROOK = Enums.PieceType.ROOK
+    queen_image =""; rook_image = ""; bishop_image = ""; knight_image = ""
+    if color == Enums.Color.BLACK:
+        queen_image = pygame.image.load(os.path.join('assets','black-queen.png'))
+        knight_image = pygame.image.load(os.path.join('assets','black-knight.png'))
+        rook_image = pygame.image.load(os.path.join('assets','black-rook.png')) 
+        bishop_image = pygame.image.load(os.path.join('assets','black-bishop.png'))
+    else:
+        queen_image = pygame.image.load(os.path.join('assets','white-queen.png'))
+        knight_image = pygame.image.load(os.path.join('assets','white-knight.png'))
+        rook_image = pygame.image.load(os.path.join('assets','white-rook.png')) 
+        bishop_image = pygame.image.load(os.path.join('assets','white-bishop.png'))
 
-    queen = Piece.piece()
-    queen.SetBasicsForPromotion(color, QUEEN)
-    queen.image = pygame.transform.scale(queen.image, (80, 80))
-
-    rook = Piece.piece()
-    rook.SetBasicsForPromotion(color, ROOK)
-    rook.image = pygame.transform.scale(rook.image, (80, 80))
-
-    bishop = Piece.piece()
-    bishop.SetBasicsForPromotion(color, BISHOP)
-    bishop.image = pygame.transform.scale(bishop.image, (80, 80))
-
-    knight = Piece.piece()
-    knight.SetBasicsForPromotion(color, KNIGHT)
-    knight.image = pygame.transform.scale(knight.image, (80, 80))
+    queen_image = pygame.transform.scale(queen_image, (80, 80))
+    rook_image = pygame.transform.scale(rook_image, (80, 80))
+    bishop_image = pygame.transform.scale(bishop_image, (80, 80))
+    knight_image = pygame.transform.scale(knight_image, (80, 80))
 
     possiblePromotion = []
-    possiblePromotion.append(rook)
-    possiblePromotion.append(queen)
-    possiblePromotion.append(knight)
-    possiblePromotion.append(bishop)
-
+    possiblePromotion.append(rook_image)
+    possiblePromotion.append(queen_image)
+    possiblePromotion.append(bishop_image)
+    possiblePromotion.append(knight_image)
+    # rook , queen , bishop , knight
     return possiblePromotion
 
 def DrawPossiblePromotion(window, color, width, height):
@@ -121,6 +117,34 @@ def DrawPossiblePromotion(window, color, width, height):
     y = height//2-80//2
     pygame.draw.rect(window, (90,50,30), (x, y, 320, 80))
     i = 0
+    # rook , queen , bishop , knight
     for piece in possiblePromotions:
-      window.blit(piece.image, (i*80 + x, y))
+      window.blit(piece, (i*80 + x, y))
       i+=1
+
+def HandlPromotionSelection(position, xOffset, yOffset, tileSize, boardObj):
+     # rook , queen , bishop , knight
+    x = (position[0] - xOffset) // tileSize
+    y = position[1] 
+    valid = False
+    if y in range(yOffset, yOffset+80):
+        if x == 0:
+            boardObj.pawnToBePromoted.SetRook(boardObj.pawnToBePromoted.color)
+            valid = True
+        elif x == 1:
+            boardObj.pawnToBePromoted.SetQueen(boardObj.pawnToBePromoted.color)
+            valid = True
+        elif x == 2:
+            boardObj.pawnToBePromoted.SetBishop(boardObj.pawnToBePromoted.color)
+            valid = True
+        elif x == 3:
+            boardObj.pawnToBePromoted.SetKnight(boardObj.pawnToBePromoted.color)
+            valid = True
+    if valid:
+        if(boardObj.pawnToBePromoted.color == Enums.Color.BLACK):
+            boardObj.cells[7][boardObj.pawnToBePromoted.previousY].pieceInCell = boardObj.pawnToBePromoted
+
+        else:
+            boardObj.cells[0][boardObj.pawnToBePromoted.previousY].pieceInCell = boardObj.pawnToBePromoted
+        boardObj.cells[boardObj.pawnToBePromoted.previousX][boardObj.pawnToBePromoted.previousY].pieceInCell = None
+        boardObj.pawnPromotion = False
