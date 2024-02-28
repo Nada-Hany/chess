@@ -13,7 +13,7 @@ def CheckForGameOver(deadPiece):
 
 def DrawGameOver(window, width, height, text):
     color = (90,50,30)
-    font = pygame.font.SysFont('comicsans', 130)
+    font = pygame.font.SysFont('comicsans', 120)
     obj = font.render(text, True, color)
     window.blit(obj, (width//2 - (obj.get_width()//2) , height//2 - (obj.get_height()//2))) 
 
@@ -73,3 +73,54 @@ def KingCastle(empty, piece: Piece.piece, col, y, cells):
                 cells[y][col].pieceInCell.moved == False):
                 Board.board.possibleMoves.append(cells[y][col])
                 piece.canCastle = True
+
+def CheckForPawnPromoption(piece:Piece.piece, y, boardObj:Board.board):   
+    if(piece.type == Enums.PieceType.PAWN and 
+       piece.color == Enums.Color.BLACK):
+        if(y == 7):
+            boardObj.pawnPromotion = True
+    elif(piece.type == Enums.PieceType.PAWN and 
+            piece.color == Enums.Color.WHITE):
+        if y == 0:
+            boardObj.pawnPromotion = True 
+
+def SetPossiblePromotions(color):
+    BISHOP =Enums.PieceType.BISHOP
+    QUEEN = Enums.PieceType.QUEEN 
+    KNIGHT = Enums.PieceType.KNIGHT 
+    ROOK = Enums.PieceType.ROOK
+
+    queen = Piece.piece()
+    queen.SetBasicsForPromotion(color, QUEEN)
+    queen.image = pygame.transform.scale(queen.image, (80, 80))
+
+    rook = Piece.piece()
+    rook.SetBasicsForPromotion(color, ROOK)
+    rook.image = pygame.transform.scale(rook.image, (80, 80))
+
+    bishop = Piece.piece()
+    bishop.SetBasicsForPromotion(color, BISHOP)
+    bishop.image = pygame.transform.scale(bishop.image, (80, 80))
+
+    knight = Piece.piece()
+    knight.SetBasicsForPromotion(color, KNIGHT)
+    knight.image = pygame.transform.scale(knight.image, (80, 80))
+
+    possiblePromotion = []
+    possiblePromotion.append(rook)
+    possiblePromotion.append(queen)
+    possiblePromotion.append(knight)
+    possiblePromotion.append(bishop)
+
+    return possiblePromotion
+
+def DrawPossiblePromotion(window, color, width, height):
+    possiblePromotions = SetPossiblePromotions(color)
+    # x y width height
+    x = width//2 - 320//2
+    y = height//2-80//2
+    pygame.draw.rect(window, (90,50,30), (x, y, 320, 80))
+    i = 0
+    for piece in possiblePromotions:
+      window.blit(piece.image, (i*80 + x, y))
+      i+=1

@@ -30,8 +30,11 @@ while running:
          running = False
       if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
          position = pygame.mouse.get_pos()
-         if(board_obj.gameOver == None):
+         if(board_obj.gameOver == None and not board_obj.pawnPromotion):
             board_obj.HandlMovement(position)
+         elif board_obj.gameOver == None and board_obj.pawnPromotion:
+            pass
+   # true if white wins
    if board_obj.gameOver == True:
       DrawGameOver(WINDOW, WIDTH, HEIGHT, "white wins!")
    elif board_obj.gameOver == False:

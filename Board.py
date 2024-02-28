@@ -6,6 +6,7 @@ import os
 
 class board:
     selectedPiece = None 
+    pawnInPromotion = None
     possibleMoves = []
     blackDeadPieces = []
     whiteDeadPieces = []
@@ -23,6 +24,8 @@ class board:
         self.tileSize = tileSize
         self.width = width
         self.height = height
+        self.pawnPromotion = False
+        self.pawnColor = None
         self.cells = [[Cell.cell(xOffset + x*tileSize,yOffset + y*tileSize) for x in range(8)] for y in range(8)]
   
     def DrawBoard(self, window):
@@ -189,7 +192,7 @@ class board:
                             # casteling
                             else:
                                 if(self.selectedPiece.canCastle):
-                                    self.MoveCastle(y, x)
+                                    self.CastleMove(y, x)
                 # selecting a piece 
                 else:
                     if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
@@ -208,6 +211,10 @@ class board:
     def MovePiece(self, y, x):
         self.cells[y][x].pieceInCell = self.selectedPiece
         self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
+        CheckForPawnPromoption(self.selectedPiece, y, self)
+        if(self.pawnPromotion):
+            self.pawnInPromotion = self.selectedPiece
+            self.pawnColor = self.selectedPiece.color
         self.Move()
         
     def Move(self):
@@ -218,7 +225,7 @@ class board:
         self.selectedPiece.Moved()
         self.selectedPiece = None
 
-    def MoveCastle(self, y, x):
+    def CastleMove(self, y, x):
 
         if self.selectedPiece.type == Enums.PieceType.KING:
             # king casteling to the right
