@@ -29,8 +29,14 @@ while running:
          running = False
       if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
          position = pygame.mouse.get_pos()
-         if(board_obj.gameOver == None):
+         if(board_obj.gameOver == None and not board_obj.pawnPromotion):
             board_obj.HandlMovement(position)
+         # checking gor pawn promotion selection
+         elif (board_obj.gameOver == None and board_obj.pawnPromotion):
+               
+               HandlPromotionSelection(position, WIDTH//2-320//2, HEIGHT//2-80//2, 80, board_obj)
+   if board_obj.pawnPromotion:
+      DrawPossiblePromotion(WINDOW, board_obj.pawnToBePromoted.color, WIDTH, HEIGHT)
    if board_obj.gameOver == True:
       DrawGameOver(WINDOW, WIDTH, HEIGHT, "white wins!")
    elif board_obj.gameOver == False:

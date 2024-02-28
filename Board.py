@@ -3,7 +3,9 @@ from move_logic import *
 from game_events import *
 import pygame
 import os
+
 class board:
+    
     selectedPiece = None 
     possibleMoves = []
     blackDeadPieces = []
@@ -11,6 +13,8 @@ class board:
     whiteTurn = True
     whitePlayerMoved = False
     gameOver = None
+    pawnToBePromoted = None
+    
     def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset, window, width, height):
         self.tilesNumber = tilesNumber
         self.window = window
@@ -21,7 +25,9 @@ class board:
         self.tileSize = tileSize
         self.width = width
         self.height = height
+        self.pawnPromotion = False
         self.cells = [[Cell.cell(xOffset + x*tileSize,yOffset + y*tileSize) for x in range(8)] for y in range(8)]
+    
     def DrawBoard(self, window):
         for i in range(self.tilesNumber):
             for g in range(self.tilesNumber):
@@ -66,7 +72,7 @@ class board:
         white_knight_img = pygame.image.load(os.path.join('assets','white-knight.png'))
         white_queen_img = pygame.image.load(os.path.join('assets','white-queen.png'))
         white_rook_img = pygame.image.load(os.path.join('assets','white-rook.png'))
-        
+
         black_rook_left = Piece.piece(BLACK, ROOK, True, False, black_rook_img)
         self.cells[0][0].SetPiece(black_rook_left)
         black_rook_right = Piece.piece(BLACK, ROOK, True, False, black_rook_img)
@@ -201,8 +207,12 @@ class board:
                             # move
                             if(self.cells[y][x].pieceInCell == None):
                                 self.MovePiece(y, x)
+   
     def MovePiece(self, y, x):
         self.cells[y][x].pieceInCell = self.selectedPiece
+        CheckForPawnPromoption(self.selectedPiece, y, self)
+        if self.pawnPromotion:
+            self.pawnToBePromoted = self.selectedPiece
         self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         self.Move()
         
