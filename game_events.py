@@ -1,4 +1,4 @@
-import Piece, Enums, Board
+import Piece, Enums, Board, Cell
 import pygame
 # not checkmate
 
@@ -18,7 +18,7 @@ def DrawGameOver(window, width, height, text):
     window.blit(obj, (width//2 - (obj.get_width()//2) , height//2 - (obj.get_height()//2))) 
 
 def DrawPlayerTurn(window, width, whiteTurn):
-    font = pygame.font.SysFont('comicsans', 32)
+    font = pygame.font.SysFont('comicsans', 30)
     playerText = ""
     color = (255, 255, 255)
     if(whiteTurn == True):
@@ -26,12 +26,11 @@ def DrawPlayerTurn(window, width, whiteTurn):
     else:
         playerText = "black turn"
     obj = font.render(playerText, True, color)
-    window.blit(obj, (width//2 - (obj.get_width()//2) , 0))
+    window.blit(obj, (width//2 - (obj.get_width()//2) , 2))
 
 def CheckForCastleMoves(piece, x, y, cells):
     empty = True
     rightCol = 7; leftCol = 0; middleCol = 4
-    piece.castleY = y
     if(piece.type == Enums.PieceType.KING and piece.moved == False):
         # (king)...right rook
         for i in range(x+1, 7):
