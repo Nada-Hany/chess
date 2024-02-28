@@ -13,17 +13,20 @@ PNGOFFSETS = (TILESIZE-PNGSIZE)//2
 BLACK, WHITE = (199, 121, 62), (255,255,255)
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
-gameStatus = Enums.GameState.RUNNING
+running = True
 board_obj = Board.board(TILENUMBER,BLACK,WHITE, TILESIZE, X_OFFSET, Y_OFFSET, WINDOW, WIDTH, HEIGHT)
 board_obj.InitializePieces()
+clock = pygame.time.Clock()
+FPS = 60
 
-while(gameStatus == Enums.GameState.RUNNING):
+while running:
+   clock.tick(FPS)
    WINDOW.fill((90,50,30))
    board_obj.DrawBoard(WINDOW)
    board_obj.DrawPieces(WINDOW, PNGOFFSETS)
    for event in pygame.event.get():
       if event.type == pygame.QUIT:
-         gameStatus = Enums.GameState.NOTRUNNING
+         running = False
       if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
          position = pygame.mouse.get_pos()
          if(board_obj.gameOver == None):

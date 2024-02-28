@@ -73,8 +73,10 @@ class board:
         self.cells[0][7].SetPiece(black_rook_right)
         black_knight_left = Piece.piece(BLACK, KNIGHT, True, False, black_knight_img)
         self.cells[0][1].SetPiece(black_knight_left)
+        black_rook_left.SetInitialCor(0, 0)
         black_knight_right = Piece.piece(BLACK, KNIGHT, True, False, black_knight_img)
         self.cells[0][6].SetPiece(black_knight_right)
+        black_rook_right.SetInitialCor(0, 7)
         black_bishop_left = Piece.piece(BLACK, BISHOP, True, False, black_bishp_img)
         self.cells[0][2].SetPiece(black_bishop_left)
         black_bishop_right = Piece.piece(BLACK, BISHOP, True, False, black_bishp_img)
@@ -83,6 +85,7 @@ class board:
         self.cells[0][3].SetPiece(black_queen)
         black_king = Piece.piece(BLACK, KING, True, False, black_king_img)
         self.cells[0][4].SetPiece(black_king)
+        black_king.SetInitialCor(0, 4)
         black_pawn1 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
         self.cells[1][0].SetPiece(black_pawn1)
         black_pawn2 =Piece.piece(BLACK, PAWN, True, False, black_pawn_img)
@@ -102,8 +105,10 @@ class board:
 
         white_rook_left = Piece.piece(WHITE, ROOK, True, False, white_rook_img)
         self.cells[7][0].SetPiece(white_rook_left)
+        white_rook_left.SetInitialCor(7, 0)
         white_rook_right = Piece.piece(WHITE, ROOK, True, False, white_rook_img)
         self.cells[7][7].SetPiece(white_rook_right)
+        white_rook_right.SetInitialCor(7, 7)
         white_knight_left = Piece.piece(WHITE, KNIGHT, True, False, white_knight_img)
         self.cells[7][1].SetPiece(white_knight_left)
         white_knight_right = Piece.piece(WHITE, KNIGHT, True, False, white_knight_img)
@@ -116,6 +121,7 @@ class board:
         self.cells[7][3].SetPiece(white_queen)
         white_king = Piece.piece(WHITE, KING, True, False, white_king_img)
         self.cells[7][4].SetPiece(white_king)
+        white_king.SetInitialCor(7, 4)
         white_pawn1 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
         self.cells[6][0].SetPiece(white_pawn1)
         white_pawn2 =Piece.piece(WHITE, PAWN, True, False, white_pawn_img)
@@ -176,16 +182,15 @@ class board:
                                 else:
                                     self.whiteDeadPieces.append(self.cells[y][x].pieceInCell)
                                 self.gameOver = CheckForGameOver(self.cells[y][x].pieceInCell)
-                                self.movePiece(y, x)
+                                self.MovePiece(y, x)
                             # casteling
                             else:
                                 if(self.selectedPiece.canCastle):
-                                    self.moveCastle(y, x)
+                                    self.MoveCastle(y, x)
                 # selecting a piece 
                 else:
                     if((self.whiteTurn and inCell.color == Enums.Color.WHITE) or (not self.whiteTurn and inCell.color == Enums.Color.BLACK)):
                         self.setSelectedPiece(x, y, inCell)
-
             else:
                 # a piece is selected and its time to move it
                 if(self.selectedPiece != None):
@@ -195,9 +200,8 @@ class board:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                             # move
                             if(self.cells[y][x].pieceInCell == None):
-                                self.movePiece(y, x)
-
-    def movePiece(self, y, x):
+                                self.MovePiece(y, x)
+    def MovePiece(self, y, x):
         self.cells[y][x].pieceInCell = self.selectedPiece
         self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         self.Move()
@@ -210,10 +214,37 @@ class board:
         self.selectedPiece.Moved()
         self.selectedPiece = None
 
-    def moveCastle(self, y, x):
-        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell.Moved()
-        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = self.cells[y][x].pieceInCell
-        self.cells[y][x].pieceInCell = self.selectedPiece
+    def MoveCastle(self, y, x):
+
+        if self.selectedPiece.type == Enums.PieceType.KING:
+            # king casteling to the right
+            if x > self.selectedPiece.previousY:
+                self.cells[y][7].pieceInCell.Moved()
+                self.cells[y][7].pieceInCell.canCastle = False
+                self.cells[y][self.selectedPiece.kingCastleRightX].pieceInCell = self.selectedPiece
+                self.cells[y][self.selectedPiece.rightRookCastleX].pieceInCell = self.cells[y][7].pieceInCell
+                self.cells[y][7].pieceInCell = None
+            # king casteling to the left
+            else:
+                self.cells[y][0].pieceInCell.Moved()
+                self.cells[y][0].pieceInCell.canCastle = False
+                self.cells[y][self.selectedPiece.kingCastleLeftX].pieceInCell = self.selectedPiece
+                self.cells[y][self.selectedPiece.leftRookCastleX].pieceInCell = self.cells[y][0].pieceInCell
+                self.cells[y][0].pieceInCell = None
+
+        elif self.selectedPiece.type == Enums.PieceType.ROOK:
+            self.cells[y][4].pieceInCell.Moved()
+            self.cells[y][4].pieceInCell.canCastle = False
+            # left rook casteling
+            if x > self.selectedPiece.previousY:
+                self.cells[y][self.selectedPiece.leftRookCastleX].pieceInCell = self.selectedPiece
+                self.cells[y][self.selectedPiece.kingCastleLeftX].pieceInCell = self.cells[y][4].pieceInCell
+                self.cells[y][4].pieceInCell = None
+            # right rook casteling
+            else:
+                self.cells[y][self.selectedPiece.rightRookCastleX].pieceInCell = self.selectedPiece
+                self.cells[y][self.selectedPiece.kingCastleRightX].pieceInCell = self.cells[y][4].pieceInCell
+                self.cells[y][4].pieceInCell = None
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         self.selectedPiece.canCastle = False
-        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell.canCastle = False
         self.Move()

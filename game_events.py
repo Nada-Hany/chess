@@ -18,7 +18,7 @@ def DrawGameOver(window, width, height, text):
     window.blit(obj, (width//2 - (obj.get_width()//2) , height//2 - (obj.get_height()//2))) 
 
 def DrawPlayerTurn(window, width, whiteTurn):
-    font = pygame.font.SysFont('comicsans', 30)
+    font = pygame.font.SysFont('comicsans', 32)
     playerText = ""
     color = (255, 255, 255)
     if(whiteTurn == True):
@@ -26,7 +26,7 @@ def DrawPlayerTurn(window, width, whiteTurn):
     else:
         playerText = "black turn"
     obj = font.render(playerText, True, color)
-    window.blit(obj, (width//2 - (obj.get_width()//2) , 2))
+    window.blit(obj, (width//2 - (obj.get_width()//2) , 0))
 
 def CheckForCastleMoves(piece, x, y, cells):
     empty = True
