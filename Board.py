@@ -150,9 +150,10 @@ class board:
         self.cells[y][x].pieceInCell.previousX = y
         self.cells[y][x].pieceInCell.previousY = x
         self.selectedPiece = piece
-        self.possibleMoves.clear()
+        self.selectedPiece.possibleMoves.clear()
         moves[piece.type](self.cells, x, y, self.selectedPiece)
         CheckForCastleMoves(self.selectedPiece, x, y, self.cells)
+        CheckForCheckMate(piece, x, y)
         
     def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
@@ -160,7 +161,7 @@ class board:
                 if(eachCell.pieceInCell != None):
                   eachCell.DrawPiece(window, pngOffsets)
         if(self.selectedPiece != None):
-            for cell in self.possibleMoves:
+            for cell in self.selectedPiece.possibleMoves:
                 self.DrawMove(window, cell.x, cell.y)
 
     def DrawMove(self, window, x, y):
@@ -180,7 +181,7 @@ class board:
                        not self.selectedPiece.canCastle):
                         self.setSelectedPiece(x, y, self.cells[y][x].pieceInCell)
                     # moving the selected piece to a valid position
-                    for cell in self.possibleMoves:
+                    for cell in self.selectedPiece.possibleMoves:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                             # kill enemy
                             if(self.cells[y][x].pieceInCell.color != self.selectedPiece.color):
@@ -201,9 +202,9 @@ class board:
             else:
                 # a piece is selected and its time to move it
                 if(self.selectedPiece != None):
-                    if(len(self.possibleMoves) == 0):
+                    if(len(self.selectedPiece.possibleMoves) == 0):
                         self.selectedPiece = None
-                    for cell in self.possibleMoves:
+                    for cell in self.selectedPiece.possibleMoves:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                             # move
                             if(self.cells[y][x].pieceInCell == None):

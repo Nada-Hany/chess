@@ -11,8 +11,9 @@ class piece:
         self.previousY = -1    
         self.moved = False
         self.canCastle = False
+        self.checkMate = False
         self.possibleMoves = []
-
+        self.invalidForKing = []
         self.leftRookCastleX = 3
         self.rightRookCastleX = 5
         self.kingCastleRightX = 6

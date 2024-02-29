@@ -148,3 +148,12 @@ def HandlPromotionSelection(position, xOffset, yOffset, tileSize, boardObj):
             boardObj.cells[0][boardObj.pawnToBePromoted.previousY].pieceInCell = boardObj.pawnToBePromoted
         boardObj.cells[boardObj.pawnToBePromoted.previousX][boardObj.pawnToBePromoted.previousY].pieceInCell = None
         boardObj.pawnPromotion = False
+
+'''we can make two type of checkmate checking:
+    first -> checking for the king move itself that its valid and won't put him in check
+    second -> checking for any ally piece moving and checking wheather this move will put the king in check or not 
+    for any of the moves it won't be a valid move anymore'''
+
+def CheckForCheckMate(piece, x, y):
+    if piece.type != Enums.PieceType.KING:
+        pass
