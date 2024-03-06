@@ -15,6 +15,8 @@ class board:
     whitePlayerMoved = False
     gameOver = None
     pawnToBePromoted = None
+    possibleMoves_ = []
+    invalidMoves_ = []
     
     def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset, window, width, height):
         self.tilesNumber = tilesNumber
@@ -151,10 +153,13 @@ class board:
         self.cells[y][x].pieceInCell.previousY = x
         self.selectedPiece = piece
         self.selectedPiece.possibleMoves.clear()
-        moves[piece.type](self.cells, x, y, self.selectedPiece)
+        moves[piece.type](x, y, self.selectedPiece, self)
         CheckForCastleMoves(self.selectedPiece, x, y, self.cells)
-        CheckForCheckMate(piece, x, y)
-        
+        if(piece.type == Enums.PieceType.KING):
+            GetCheckMates(piece, x, y, self)
+            print(piece.possibleMoves)
+            print(piece.invalidMoves)
+            
     def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
             for eachCell in cell:
@@ -162,7 +167,8 @@ class board:
                   eachCell.DrawPiece(window, pngOffsets)
         if(self.selectedPiece != None):
             for cell in self.selectedPiece.possibleMoves:
-                self.DrawMove(window, cell.x, cell.y)
+                if cell not in self.selectedPiece.invalidMoves:
+                    self.DrawMove(window, cell.x, cell.y)
 
     def DrawMove(self, window, x, y):
         pygame.draw.rect(window, (200, 0, 0), (x + 2, y + 2, 76, 76), 4)
@@ -202,13 +208,12 @@ class board:
             else:
                 # a piece is selected and its time to move it
                 if(self.selectedPiece != None):
-                    if(len(self.selectedPiece.possibleMoves) == 0):
-                        self.selectedPiece = None
                     for cell in self.selectedPiece.possibleMoves:
-                        if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
-                            # move
-                            if(self.cells[y][x].pieceInCell == None):
-                                self.MovePiece(y, x)
+                            if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
+                                # move
+                                if cell not in self.selectedPiece.invalidMoves:
+                                    if(self.cells[y][x].pieceInCell == None):
+                                        self.MovePiece(y, x)
    
     def MovePiece(self, y, x):
         self.cells[y][x].pieceInCell = self.selectedPiece

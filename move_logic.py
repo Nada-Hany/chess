@@ -1,233 +1,245 @@
-import Board, Enums
+import Enums
 
-def CheckHorizontal(cells, x, y, selectedPiece):
+def ValidHorizontal(x, y, selectedPiece, board):
     collided = False
     for i in range(1, 8):
         if((x-i) in range(8)):
-            if(cells[y][x-i].pieceInCell != None):
-                if(cells[y][x-i].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y][x-i].pieceInCell != None):
+                if(board.cells[y][x-i].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y][x-i].pieceInCell.color != selectedPiece.color and (not collided)):
-                    selectedPiece.possibleMoves.append(cells[y][x-i])
+                if(board.cells[y][x-i].pieceInCell.color != selectedPiece.color and (not collided)):
+                    selectedPiece.possibleMoves.append(board.cells[y][x-i])
                     collided = True
-            elif(cells[y][x-i].pieceInCell == None and not collided):
-                selectedPiece.possibleMoves.append(cells[y][x-i])
+            elif(board.cells[y][x-i].pieceInCell == None and not collided):
+                selectedPiece.possibleMoves.append(board.cells[y][x-i])
     collided = False
     for i in range(1, 8):
         if((x+i) in range(8)):
-            if(cells[y][x+i].pieceInCell != None):
-                if(cells[y][x+i].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y][x+i].pieceInCell != None):
+                if(board.cells[y][x+i].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y][x+i].pieceInCell.color != selectedPiece.color and (not collided)):
-                    selectedPiece.possibleMoves.append(cells[y][x+i])
+                if(board.cells[y][x+i].pieceInCell.color != selectedPiece.color and (not collided)):
+                    selectedPiece.possibleMoves.append(board.cells[y][x+i])
                     collided = True
-            elif(cells[y][x+i].pieceInCell == None and not collided):
-                selectedPiece.possibleMoves.append(cells[y][x+i])
+            elif(board.cells[y][x+i].pieceInCell == None and not collided):
+                selectedPiece.possibleMoves.append(board.cells[y][x+i])
 
-def CheckVertical(cells, x, y, selectedPiece):
+def ValidVertical(x, y, selectedPiece, board):
     collided = False
     for i in range(1, 8):
         if((y+i) in range(8)):
-            if(cells[y+i][x].pieceInCell != None):
-                if(cells[y+i][x].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y+i][x].pieceInCell != None):
+                if(board.cells[y+i][x].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y+i][x].pieceInCell.color != selectedPiece.color and collided == False):
-                    selectedPiece.possibleMoves.append(cells[y+i][x])
+                if(board.cells[y+i][x].pieceInCell.color != selectedPiece.color and collided == False):
+                    selectedPiece.possibleMoves.append(board.cells[y+i][x])
                     collided = True
-            elif(cells[y+i][x].pieceInCell == None and not collided):
-                selectedPiece.possibleMoves.append(cells[y+i][x])
+            elif(board.cells[y+i][x].pieceInCell == None and not collided):
+                selectedPiece.possibleMoves.append(board.cells[y+i][x])
     collided = False
     for i in range(1, 8):
            if((y-i) in range(8)):
-            if(cells[y-i][x].pieceInCell != None):
-                if(cells[y-i][x].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y-i][x].pieceInCell != None):
+                if(board.cells[y-i][x].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y-i][x].pieceInCell.color != selectedPiece.color and collided == False):
-                    selectedPiece.possibleMoves.append(cells[y-i][x])
+                if(board.cells[y-i][x].pieceInCell.color != selectedPiece.color and collided == False):
+                    selectedPiece.possibleMoves.append(board.cells[y-i][x])
                     collided = True
-            elif(cells[y-i][x].pieceInCell == None and not collided):
-                selectedPiece.possibleMoves.append(cells[y-i][x])
+            elif(board.cells[y-i][x].pieceInCell == None and not collided):
+                selectedPiece.possibleMoves.append(board.cells[y-i][x])
 
-def CheckPrimalDiagonal(cells, x, y, selectedPiece):
+def CheckPrimalDiagonal(x, y, selectedPiece, board):
     collided = False
     for i in range(1,8):
         if((y+i) in range(8) and (x+i) in range(8)):
-            if(cells[y+i][x+i].pieceInCell != None):
-                if(cells[y+i][x+i].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y+i][x+i].pieceInCell != None):
+                if(board.cells[y+i][x+i].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y+i][x+i].pieceInCell.color != selectedPiece.color and collided == False):
-                    selectedPiece.possibleMoves.append(cells[y+i][x+i])
+                if(board.cells[y+i][x+i].pieceInCell.color != selectedPiece.color and collided == False):
+                    selectedPiece.possibleMoves.append(board.cells[y+i][x+i])
                     collided = True
-            elif(cells[y+i][x+i].pieceInCell == None and (not collided)):
-                    selectedPiece.possibleMoves.append(cells[y+i][x+i])
+            elif(board.cells[y+i][x+i].pieceInCell == None and (not collided)):
+                    selectedPiece.possibleMoves.append(board.cells[y+i][x+i])
     collided = False
     for i in range(1,8):
         if((y-i) in range(8) and (x-i) in range(8)):
-            if(cells[y-i][x-i].pieceInCell != None):
-                if(cells[y-i][x-i].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y-i][x-i].pieceInCell != None):
+                if(board.cells[y-i][x-i].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y-i][x-i].pieceInCell.color != selectedPiece.color and collided == False):
-                    selectedPiece.possibleMoves.append(cells[y-i][x-i])
+                if(board.cells[y-i][x-i].pieceInCell.color != selectedPiece.color and collided == False):
+                    selectedPiece.possibleMoves.append(board.cells[y-i][x-i])
                     collided = True
-            elif(cells[y-i][x-i].pieceInCell == None and (not collided)):
-                    selectedPiece.possibleMoves.append(cells[y-i][x-i])
+            elif(board.cells[y-i][x-i].pieceInCell == None and (not collided)):
+                    selectedPiece.possibleMoves.append(board.cells[y-i][x-i])
 
-def CheckSecondaryDiagonal(cells, x, y, selectedPiece):
+def CheckSecondaryDiagonal(x, y, selectedPiece, board):
     collided = False
     for i in range(1, 8):
         if((y+i) in range(8) and (x-i) in range(8)):
-            if(cells[y+i][x-i].pieceInCell != None):
-                if(cells[y+i][x-i].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y+i][x-i].pieceInCell != None):
+                if(board.cells[y+i][x-i].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y+i][x-i].pieceInCell.color != selectedPiece.color and collided == False):
-                    selectedPiece.possibleMoves.append(cells[y+i][x-i])
+                if(board.cells[y+i][x-i].pieceInCell.color != selectedPiece.color and collided == False):
+                    selectedPiece.possibleMoves.append(board.cells[y+i][x-i])
                     collided = True
-            elif(cells[y+i][x-i].pieceInCell == None and not collided):
-                    selectedPiece.possibleMoves.append(cells[y+i][x-i])
+            elif(board.cells[y+i][x-i].pieceInCell == None and not collided):
+                    selectedPiece.possibleMoves.append(board.cells[y+i][x-i])
     collided = False
     for i in range(1, 8):
         if((y-i) in range(8) and (x+i) in range(8)):
-            if(cells[y-i][x+i].pieceInCell != None):
-                if(cells[y-i][x+i].pieceInCell.color == selectedPiece.color):
+            if(board.cells[y-i][x+i].pieceInCell != None):
+                if(board.cells[y-i][x+i].pieceInCell.color == selectedPiece.color):
                     break
-                if(cells[y-i][x+i].pieceInCell.color != selectedPiece.color and collided == False):
-                    selectedPiece.possibleMoves.append(cells[y-i][x+i])
+                if(board.cells[y-i][x+i].pieceInCell.color != selectedPiece.color and collided == False):
+                    selectedPiece.possibleMoves.append(board.cells[y-i][x+i])
                     collided = True
-            elif(cells[y-i][x+i].pieceInCell == None and not collided):
-                    selectedPiece.possibleMoves.append(cells[y-i][x+i])
+            elif(board.cells[y-i][x+i].pieceInCell == None and not collided):
+                    selectedPiece.possibleMoves.append(board.cells[y-i][x+i])
 
-def CheckDiagonally(cells, x, y, selectedPiece):
-    CheckSecondaryDiagonal(cells, x, y, selectedPiece)
-    CheckPrimalDiagonal(cells, x, y, selectedPiece)
+def CheckDiagonally(x, y, selectedPiece, board):
+    CheckSecondaryDiagonal(x, y, selectedPiece, board)
+    CheckPrimalDiagonal(x, y, selectedPiece, board)
 
-def move_pawn(cells, x, y, selectedPiece):
-    if(cells[y][x].pieceInCell.color == Enums.Color.BLACK):
-        if(y == 1 and cells[y+2][x].pieceInCell == None and cells[y+1][x].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y+2][x])
-        if((y+1)in range(8) and (x-1) in range(8) and cells[y+1][x-1].pieceInCell != None and cells[y+1][x-1].pieceInCell.color == Enums.Color.WHITE):
-            selectedPiece.possibleMoves.append(cells[y+1][x-1])
-        if((y+1)in range(8) and (x+1) in range(8) and cells[y+1][x+1].pieceInCell != None and cells[y+1][x+1].pieceInCell.color == Enums.Color.WHITE):
-            selectedPiece.possibleMoves.append(cells[y+1][x+1])
-        if((y+1) in range (8) and cells[y+1][x].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y+1][x])
+def move_pawn(x, y, selectedPiece, board):
+    if(board.cells[y][x].pieceInCell.color == Enums.Color.BLACK):
+        if(y == 1 and board.cells[y+2][x].pieceInCell == None and board.cells[y+1][x].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y+2][x])
+        if((y+1)in range(8) and (x-1) in range(8) and board.cells[y+1][x-1].pieceInCell != None and
+           board.cells[y+1][x-1].pieceInCell.color == Enums.Color.WHITE):
+            selectedPiece.possibleMoves.append(board.cells[y+1][x-1])
+        if((y+1)in range(8) and (x+1) in range(8) and board.cells[y+1][x+1].pieceInCell != None and 
+           board.cells[y+1][x+1].pieceInCell.color == Enums.Color.WHITE):
+            selectedPiece.possibleMoves.append(board.cells[y+1][x+1])
+        if((y+1) in range (8) and board.cells[y+1][x].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y+1][x])
 
     else:
-        if(y == 6 and cells[y-2][x].pieceInCell == None and cells[y-1][x].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y-2][x])
-        if((y-1)in range(8) and (x-1) in range(8) and cells[y-1][x-1].pieceInCell != None and cells[y-1][x-1].pieceInCell.color == Enums.Color.BLACK):
-            selectedPiece.possibleMoves.append(cells[y-1][x-1])
-        if((y-1)in range(8) and (x+1) in range(8) and cells[y-1][x+1].pieceInCell != None and cells[y-1][x+1].pieceInCell.color == Enums.Color.BLACK):
-            selectedPiece.possibleMoves.append(cells[y-1][x+1])
-        if((y-1) in range (8) and cells[y-1][x].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y-1][x])
+        if(y == 6 and board.cells[y-2][x].pieceInCell == None and board.cells[y-1][x].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y-2][x])
+        if((y-1)in range(8) and (x-1) in range(8) and board.cells[y-1][x-1].pieceInCell != None and 
+           board.cells[y-1][x-1].pieceInCell.color == Enums.Color.BLACK):
+            selectedPiece.possibleMoves.append(board.cells[y-1][x-1])
+        if((y-1)in range(8) and (x+1) in range(8) and board.cells[y-1][x+1].pieceInCell != None and 
+           board.cells[y-1][x+1].pieceInCell.color == Enums.Color.BLACK):
+            selectedPiece.possibleMoves.append(board.cells[y-1][x+1])
+        if((y-1) in range (8) and board.cells[y-1][x].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y-1][x])
 
-def move_bishop(cells, x, y, selectedPiece):
-    CheckDiagonally(cells, x, y, selectedPiece)
+def move_bishop(x, y, selectedPiece, board):
+    CheckDiagonally(x, y, selectedPiece, board)
 
-def move_king(cells, x, y, selectedPiece):
-    if((y-1)in range(8) and (x+1) in range(8) and cells[y-1][x+1].pieceInCell != None and cells[y-1][x+1].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y-1][x+1])
-    if((y+1)in range(8) and (x+1) in range(8) and cells[y+1][x+1].pieceInCell != None and cells[y+1][x+1].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y+1][x+1])
-    if((y+1)in range(8) and (x-1) in range(8) and cells[y+1][x-1].pieceInCell != None and cells[y+1][x-1].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y+1][x-1])
-    if((y-1)in range(8) and (x-1) in range(8) and cells[y-1][x-1].pieceInCell != None and cells[y-1][x-1].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y-1][x-1])
+def move_king(x, y, selectedPiece, board):
+    if((y-1)in range(8) and (x+1) in range(8) and board.cells[y-1][x+1].pieceInCell != None and 
+       board.cells[y-1][x+1].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y-1][x+1])
+    if((y+1)in range(8) and (x+1) in range(8) and board.cells[y+1][x+1].pieceInCell != None and 
+       board.cells[y+1][x+1].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y+1][x+1])
+    if((y+1)in range(8) and (x-1) in range(8) and board.cells[y+1][x-1].pieceInCell != None and 
+       board.cells[y+1][x-1].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y+1][x-1])
+    if((y-1)in range(8) and (x-1) in range(8) and board.cells[y-1][x-1].pieceInCell != None and 
+       board.cells[y-1][x-1].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y-1][x-1])
 
-    if((y-1)in range(8) and cells[y-1][x].pieceInCell != None and cells[y-1][x].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y-1][x])
-    if((y+1)in range(8) and cells[y+1][x].pieceInCell != None and cells[y+1][x].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y+1][x])
-    if((x-1) in range(8) and cells[y][x-1].pieceInCell != None and cells[y][x-1].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y][x-1])
-    if((x+1) in range(8) and cells[y][x+1].pieceInCell != None and cells[y][x+1].pieceInCell.color != selectedPiece.color):
-        selectedPiece.possibleMoves.append(cells[y][x+1])
+    if((y-1)in range(8) and board.cells[y-1][x].pieceInCell != None and
+        board.cells[y-1][x].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y-1][x])
+    if((y+1)in range(8) and board.cells[y+1][x].pieceInCell != None and
+        board.cells[y+1][x].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y+1][x])
+    if((x-1) in range(8) and board.cells[y][x-1].pieceInCell != None and 
+       board.cells[y][x-1].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y][x-1])
+    if((x+1) in range(8) and board.cells[y][x+1].pieceInCell != None and
+        board.cells[y][x+1].pieceInCell.color != selectedPiece.color):
+        selectedPiece.possibleMoves.append(board.cells[y][x+1])
 
-    if((y+1) in range (8) and cells[y+1][x].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y+1][x])
-    if((y-1) in range (8) and cells[y-1][x].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y-1][x])
-    if((x+1) in range (8) and cells[y][x+1].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y][x+1])
-    if((x-1) in range (8) and cells[y][x-1].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y][x-1])
+    if((y+1) in range (8) and board.cells[y+1][x].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y+1][x])
+    if((y-1) in range (8) and board.cells[y-1][x].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y-1][x])
+    if((x+1) in range (8) and board.cells[y][x+1].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y][x+1])
+    if((x-1) in range (8) and board.cells[y][x-1].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y][x-1])
 
-    if((y+1) in range (8) and (x+1) in range(8) and cells[y+1][x+1].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y+1][x+1])
-    if((y-1) in range (8) and (x-1) in range(8) and cells[y-1][x-1].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y-1][x-1])
-    if((y-1) in range(8) and (x+1) in range (8) and cells[y-1][x+1].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y-1][x+1])
-    if((y+1) in range(8) and (x-1) in range (8) and cells[y+1][x-1].pieceInCell == None):
-        selectedPiece.possibleMoves.append(cells[y+1][x-1])
+    if((y+1) in range (8) and (x+1) in range(8) and board.cells[y+1][x+1].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y+1][x+1])
+    if((y-1) in range (8) and (x-1) in range(8) and board.cells[y-1][x-1].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y-1][x-1])
+    if((y-1) in range(8) and (x+1) in range (8) and board.cells[y-1][x+1].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y-1][x+1])
+    if((y+1) in range(8) and (x-1) in range (8) and board.cells[y+1][x-1].pieceInCell == None):
+        selectedPiece.possibleMoves.append(board.cells[y+1][x-1])
 
-def move_queen(cells, x, y, selectedPiece):
-    CheckHorizontal(cells, x, y, selectedPiece)
-    CheckDiagonally(cells, x, y, selectedPiece)
-    CheckVertical(cells, x, y, selectedPiece)
+def move_queen(x, y, selectedPiece, board):
+    ValidHorizontal(x, y, selectedPiece, board)
+    CheckDiagonally(x, y, selectedPiece, board)
+    ValidVertical(x, y, selectedPiece, board)
 
-def move_rook(cells, x, y, selectedPiece):
-    CheckHorizontal(cells, x, y, selectedPiece)
-    CheckVertical(cells, x, y, selectedPiece)
+def move_rook(x, y, selectedPiece, board):
+    ValidHorizontal(x, y, selectedPiece, board)
+    ValidVertical(x, y, selectedPiece, board)
 
-def move_knight(cells, x, y, selectedPiece):
+def move_knight(x, y, selectedPiece, board):
     if((y-2) in range(8) and (x+1) in range(8)):
-        if(cells[y-2][x+1].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y-2][x+1])
+        if(board.cells[y-2][x+1].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y-2][x+1])
         else:
-            if(cells[y-2][x+1].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y-2][x+1])
+            if(board.cells[y-2][x+1].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y-2][x+1])
 
     if((y-2) in range(8) and (x-1) in range(8)):
-        if(cells[y-2][x-1].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y-2][x-1])
+        if(board.cells[y-2][x-1].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y-2][x-1])
         else:
-            if(cells[y-2][x-1].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y-2][x-1])
+            if(board.cells[y-2][x-1].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y-2][x-1])
 
     if((y+2) in range(8) and (x+1) in range(8)):
-        if(cells[y+2][x+1].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y+2][x+1])
+        if(board.cells[y+2][x+1].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y+2][x+1])
         else:
-            if(cells[y+2][x+1].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y+2][x+1])
+            if(board.cells[y+2][x+1].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y+2][x+1])
 
     if((y+2) in range(8) and (x-1) in range(8)):
-        if(cells[y+2][x-1].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y+2][x-1])
+        if(board.cells[y+2][x-1].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y+2][x-1])
         else:
-            if(cells[y+2][x-1].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y+2][x-1])
+            if(board.cells[y+2][x-1].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y+2][x-1])
 
     
     if((y+1) in range(8) and (x-2) in range(8)):
-        if(cells[y+1][x-2].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y+1][x-2])
+        if(board.cells[y+1][x-2].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y+1][x-2])
         else:
-            if(cells[y+1][x-2].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y+1][x-2])
+            if(board.cells[y+1][x-2].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y+1][x-2])
     
     if((y-1) in range(8) and (x+2) in range(8)):
-        if(cells[y-1][x+2].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y-1][x+2])
+        if(board.cells[y-1][x+2].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y-1][x+2])
         else:
-            if(cells[y-1][x+2].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y-1][x+2])
+            if(board.cells[y-1][x+2].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y-1][x+2])
     
     if((y-1) in range(8) and (x-2) in range(8)):
-        if(cells[y-1][x-2].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y-1][x-2])
+        if(board.cells[y-1][x-2].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y-1][x-2])
         else:
-            if(cells[y-1][x-2].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y-1][x-2])
+            if(board.cells[y-1][x-2].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y-1][x-2])
 
-    
+
     if((y+1) in range(8) and (x+2) in range(8)):
-        if(cells[y+1][x+2].pieceInCell == None):
-            selectedPiece.possibleMoves.append(cells[y+1][x+2])
+        if(board.cells[y+1][x+2].pieceInCell == None):
+            selectedPiece.possibleMoves.append(board.cells[y+1][x+2])
         else:
-            if(cells[y+1][x+2].pieceInCell.color != selectedPiece.color):
-                selectedPiece.possibleMoves.append(cells[y+1][x+2])
+            if(board.cells[y+1][x+2].pieceInCell.color != selectedPiece.color):
+                selectedPiece.possibleMoves.append(board.cells[y+1][x+2])
                     
 moves = {
     Enums.PieceType.PAWN : move_pawn,

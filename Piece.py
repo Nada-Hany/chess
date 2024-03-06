@@ -1,4 +1,4 @@
-import Enums, pygame, os
+import Enums, os
 class piece:
 
     def __init__(self, color:Enums.Color, type, isAlive = True, isSelected = False, image = None):
@@ -13,7 +13,7 @@ class piece:
         self.canCastle = False
         self.checkMate = False
         self.possibleMoves = []
-        self.invalidForKing = []
+        self.invalidMoves = []
         self.leftRookCastleX = 3
         self.rightRookCastleX = 5
         self.kingCastleRightX = 6
