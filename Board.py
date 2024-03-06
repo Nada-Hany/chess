@@ -15,8 +15,6 @@ class board:
     whitePlayerMoved = False
     gameOver = None
     pawnToBePromoted = None
-    possibleMoves_ = []
-    invalidMoves_ = []
     
     def __init__(self, tilesNumber,color1, color2, tileSize, xOffset, yOffset, window, width, height):
         self.tilesNumber = tilesNumber
