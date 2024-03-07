@@ -160,22 +160,22 @@ def HandlPromotionSelection(position, xOffset, yOffset, tileSize, boardObj):
 # if moved diagonally we check vertivally/horizontally
 
 #pawn always diagonally---
-def HorizontalliInvalids(piece, x, y, board, cells):
-    # right
-    for i in range(x,8-x-1):
+def HorizontalliInvalids(piece, x, y, board):
+    # right -> same y -- x+1
+    for i in range(x,8):
         if(board.cells[y][i].pieceInCell != None):
             if(board.cells[y][i].pieceInCell.color == piece.color):
                 break
             else:
                 if(board.cells[y][i].pieceInCell.type == Enums.PieceType.QUEEN or
                 board.cells[y][i].pieceInCell.type == Enums.PieceType.ROOK):
-                    piece.invalidMoves.append((y,i))
+                    piece.invalidMoves.append((y,x))
                     break
                 if(board.cells[y][i].pieceInCell.type == Enums.PieceType.KING 
                 and (x+1) in range(8) and i == x+1):
-                    piece.invalidMoves.append((y,i))
+                    piece.invalidMoves.append((y,x))
                     break
-
+    # left -> same y , x-1
     for i in range(0,x):
         if(board.cells[y][i].pieceInCell != None):
             if(board.cells[y][i].pieceInCell.color == piece.color):
@@ -183,29 +183,29 @@ def HorizontalliInvalids(piece, x, y, board, cells):
             else:
                 if(board.cells[y][i].pieceInCell.type == Enums.PieceType.QUEEN or
                 board.cells[y][i].pieceInCell.type == Enums.PieceType.ROOK):
-                    piece.invalidMoves.append((y,i))
+                    piece.invalidMoves.append((y,x))
                     break
                 if(board.cells[y][i].pieceInCell.type == Enums.PieceType.KING 
                 and (x-1)in range(8) and i == x-1):
-                    piece.invalidMoves.append((y,i))
+                    piece.invalidMoves.append((y,x))
                     break
     
-def VerticallyInvalids(piece, x, y, board, cells):
-    # upwards
-    for i in range(y,8-y-1):
+def VerticallyInvalids(piece, x, y, board):
+    # upwards -> same x and y-1
+    for i in range(y,8):
         if(board.cells[i][x].pieceInCell != None):
             if(board.cells[i][x].pieceInCell.color == piece.color):
                 break
             else:
                 if(board.cells[i][x].pieceInCell.type == Enums.PieceType.QUEEN or
                 board.cells[i][x].pieceInCell.type == Enums.PieceType.ROOK):
-                    piece.invalidMoves.append((i,x))
+                    piece.invalidMoves.append((y,x))
                     break
                 if(board.cells[i][x].pieceInCell.type == Enums.PieceType.KING 
                 and y-1 in range(8) and i == y-1):
-                    piece.invalidMoves.append((i,x))
+                    piece.invalidMoves.append((y,x))
                     break
-    # downwards
+    # downwards -> same x and y+1
     for i in range(0,y):
         if(board.cells[i][x].pieceInCell != None):
             if(board.cells[i][x].pieceInCell.color == piece.color):
@@ -213,18 +213,14 @@ def VerticallyInvalids(piece, x, y, board, cells):
             else:
                 if(board.cells[i][x].pieceInCell.type == Enums.PieceType.QUEEN or
                     board.cells[i][x].pieceInCell.type == Enums.PieceType.ROOK):
-                        piece.invalidMoves.append((i,x))
+                        piece.invalidMoves.append((y,x))
                         break
-                if(board.cells[i][x ].pieceInCell.type == Enums.PieceType.KING 
+                if(board.cells[i][x].pieceInCell.type == Enums.PieceType.KING 
                 and (y+1) in range(8) and i == y+1):
-                    piece.invalidMoves.append((i,x))
-                    break
-                if(board.cells[i][x].pieceInCell.type == Enums.PieceType.PAWN 
-                and i == y-1):
-                    piece.invalidMoves.append((i,x))
+                    piece.invalidMoves.append((y,x))
                     break
 
-def DiagonallyInvalids(piece, x, y, board, cells):
+def DiagonallyInvalids(piece, x, y, board):
     # bottom right
     for i in range(1,8):
         if((y+i) in range(8) and (x+i) in range(8)):
@@ -234,12 +230,12 @@ def DiagonallyInvalids(piece, x, y, board, cells):
                 else:
                     if(board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.QUEEN):
-                        piece.invalidMoves.append((y+i,x+i))
+                        piece.invalidMoves.append((y,x))
                         break
                     if((board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.KING or
                         board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.PAWN) and
                         y+i == y+1 and x+i == x+1):
-                        piece.invalidMoves.append((y+i,x+i))
+                        piece.invalidMoves.append((y,x))
                         break
     # bottom left
     for i in range(1,8):
@@ -250,12 +246,12 @@ def DiagonallyInvalids(piece, x, y, board, cells):
                 else:
                     if(board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.QUEEN):
-                        piece.invalidMoves.append((y+i,x-i))
+                        piece.invalidMoves.append((y,x))
                         break
                     if((board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.KING or
                         board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.PAWN) and
                         y+i == y+1 and x-i == x-1):
-                        piece.invalidMoves.append((y+i,x-i))
+                        piece.invalidMoves.append((y,x))
                         break            
     # top left
     for i in range(1,8):
@@ -266,12 +262,12 @@ def DiagonallyInvalids(piece, x, y, board, cells):
                 else:
                     if(board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.QUEEN):
-                        piece.invalidMoves.append((y-i,x-i))
+                        piece.invalidMoves.append((y,x))
                         break
                     if((board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.KING or
                         board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.PAWN) and
                         y-i == y-1 and x-i == x-1):
-                        piece.invalidMoves.append((y-i,x-i))
+                        piece.invalidMoves.append((y,x))
                         break
     # top right
     for i in range(1,8):
@@ -282,84 +278,84 @@ def DiagonallyInvalids(piece, x, y, board, cells):
                 else:
                     if(board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.QUEEN):
-                        piece.invalidMoves.append((y-i,x+i))  
+                        piece.invalidMoves.append((y,x))
                         break
                     if((board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.KING or
                         board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.PAWN) and
                         y-i == y-1 and x+i == x+1):
-                        piece.invalidMoves.append((y-i,x+i))
+                        piece.invalidMoves.append((y,x))
                         break
 
-def KnightInvalids(piece, x, y, board, cells):
+def KnightInvalids(piece, x, y, board):
     if((y-2) in range(8) and (x+1) in range(8)):
         if(board.cells[y-2][x+1].pieceInCell != None and board.cells[y-2][x+1].pieceInCell.color != piece.color):
-            piece.invalidMoves.append((y-2,x+1))
+            piece.invalidMoves.append((y,x))
             
 
     if((y-2) in range(8) and (x-1) in range(8)):
         if(board.cells[y-2][x-1].pieceInCell != None and board.cells[y-2][x-1].pieceInCell.color != piece.color):
-            piece.invalidMoves.append((y-2,x-1))
+            piece.invalidMoves.append((y,x))
                 
 
     if((y+2) in range(8) and (x+1) in range(8)):
         if(board.cells[y+2][x+1].pieceInCell == None):
-             piece.invalidMoves.append((y+2,x+1))
+            piece.invalidMoves.append((y,x))   
         else:
             if(board.cells[y+2][x+1].pieceInCell.color != piece.color):
-                 piece.invalidMoves.append((y+2,x+1))
+                piece.invalidMoves.append((y,x))
 
     if((y+2) in range(8) and (x-1) in range(8)):
         if(board.cells[y+2][x-1].pieceInCell != None and board.cells[y+2][x-1].pieceInCell.color != piece.color):
-                 piece.invalidMoves.append((y+2,x-1))
+                piece.invalidMoves.append((y,x))
 
     
     if((y+1) in range(8) and (x-2) in range(8)):
         if(board.cells[y+1][x-2].pieceInCell != None and board.cells[y+1][x-2].pieceInCell.color != piece.color):
-                 piece.invalidMoves.append((y+1,x-2))
+                piece.invalidMoves.append((y,x))
     
     if((y-1) in range(8) and (x+2) in range(8)):
         if(board.cells[y-1][x+2].pieceInCell != None and board.ells[y-1][x+2].pieceInCell.color != piece.color):
-                 piece.invalidMoves.append((y-1,x+2))
+                piece.invalidMoves.append((y,x))
     
     if((y-1) in range(8) and (x-2) in range(8)):
         if(board.cells[y-1][x-2].pieceInCell != None and board.cells[y-1][x-2].pieceInCell.color != piece.color):
-                 piece.invalidMoves.append((y-1,x-2))
+                piece.invalidMoves.append((y,x))
 
     if((y+1) in range(8) and (x+2) in range(8)):
         if(board.cells[y+1][x+2].pieceInCell != None and board.cells[y+1][x+2].pieceInCell.color != piece.color):
-                 piece.invalidMoves.append((y+1,x))
+                piece.invalidMoves.append((y,x))
 
 def GetCheckMates(piece, x, y, board):
     # above
     if((y-1) in range(8) and board.cells[y-1][x].pieceInCell == None):
-        VerticallyInvalids(piece, x, y-1, board)
+        HorizontalliInvalids(piece, x, y-1, board)
         DiagonallyInvalids(piece, x, y-1, board)
+        print(1, piece.invalidMoves)
     # down
     if((y+1) in range(8) and board.cells[y+1][x].pieceInCell == None):
-        VerticallyInvalids(piece, x, y+1, board)
-        DiagonallyInvalids(piece, x, y-1, board)
+        HorizontalliInvalids(piece, x, y+1, board)
+        DiagonallyInvalids(piece, x, y+1, board)
     # right
     if((x+1) in range(8) and board.cells[y][x+1].pieceInCell == None):
-        HorizontalliInvalids(piece, x+1, y, board)
-        DiagonallyInvalids(piece, x, y-1, board)
+        VerticallyInvalids(piece, x+1, y, board)
+        DiagonallyInvalids(piece, x+1, y, board)
     # left
     if((x-1) in range(8) and board.cells[y][x-1].pieceInCell == None):
-        HorizontalliInvalids(piece, x-1, y, board)
-        DiagonallyInvalids(piece, x, y-1, board)
+        VerticallyInvalids(piece, x-1, y, board)
+        DiagonallyInvalids(piece, x-1, y, board)
     # right top
     if((y-1) in range(8) and (x+1) in range(8) and board.cells[y-1][x+1].pieceInCell == None):
+        print(2, piece.invalidMoves)
         DiagonallyInvalids(piece, x+1, y-1, board)
-        DiagonallyInvalids(piece, x, y-1, board)
     # left top
     if((y-1) in range(8) and (x-1) in range(8) and board.cells[y-1][x-1].pieceInCell == None):
-        DiagonallyInvalids(piece, x+1, y-1, board)
-        DiagonallyInvalids(piece, x, y-1, board)
+        print(3, piece.invalidMoves)
+        DiagonallyInvalids(piece, x-1, y-1, board)
+
     # right bottom
     if((y+1) in range(8) and (x+1) in range(8) and board.cells[y+1][x+1].pieceInCell == None):
-        DiagonallyInvalids(piece, x+1, y-1, board)
-        DiagonallyInvalids(piece, x, y-1, board)
+        DiagonallyInvalids(piece, x+1, y+1, board)
     # left bottom
     if((y+1) in range(8) and (x-1) in range(8) and board.cells[y+1][x-1].pieceInCell == None):
-        DiagonallyInvalids(piece, x+1, y-1, board)
-        DiagonallyInvalids(piece, x, y-1, board)
-        
+        DiagonallyInvalids(piece, x-1, y+1, board)
+
