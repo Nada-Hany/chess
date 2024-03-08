@@ -191,6 +191,7 @@ class board:
                        not self.selectedPiece.canCastle):
                         self.setSelectedPiece(x, y, self.cells[y][x].pieceInCell)
                     # moving the selected piece to a valid position
+                    print(self.selectedPiece.possibleMoves)
                     for cell in self.selectedPiece.possibleMoves:
                         if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                             # kill enemy

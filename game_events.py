@@ -63,14 +63,14 @@ def RookCastle(empty, piece:Piece.piece, middleCol, y, cells):
     if empty:
         if(cells[y][middleCol].pieceInCell != None and cells[y][middleCol].pieceInCell.type == Enums.PieceType.KING
             and cells[y][middleCol].pieceInCell.moved == False):
-            Board.board.possibleMoves.append(cells[y][middleCol])
+            piece.possibleMoves.append(cells[y][middleCol])
             piece.canCastle = True
 
 def KingCastle(empty, piece: Piece.piece, col, y, cells):
     if empty:
             if(cells[y][col].pieceInCell != None and cells[y][col].pieceInCell.type == Enums.PieceType.ROOK and 
                 cells[y][col].pieceInCell.moved == False):
-                Board.board.possibleMoves.append(cells[y][col])
+                piece.possibleMoves.append(cells[y][col])
                 piece.canCastle = True
 
 def CheckForPawnPromoption(piece:Piece.piece, y, boardObj):   
