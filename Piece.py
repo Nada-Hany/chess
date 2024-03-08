@@ -9,6 +9,8 @@ class piece:
         self.image = image
         self.previousX = -1
         self.previousY = -1    
+        self.kingY = -1    
+        self.kingX = -1    
         self.moved = False
         self.canCastle = False
         self.checkMate = False
@@ -47,7 +49,6 @@ class piece:
 
     def SetBishop(self, color):
         BISHOP = Enums.PieceType.BISHOP
-
         self.type = BISHOP
         if(color == Enums.Color.BLACK):
             black_bishp_img = pygame.image.load(os.path.join('assets','black-bishop.png'))
@@ -88,10 +89,3 @@ class piece:
         else:
             white_knight_img = pygame.image.load(os.path.join('assets','white-knight.png'))
             self.image = white_knight_img
-
-    PromotePawn={
-        Enums.PieceType.BISHOP : SetBishop,
-        Enums.PieceType.QUEEN : SetQueen,
-        Enums.PieceType.KNIGHT : SetKnight,
-        Enums.PieceType.ROOK : SetRook
-    }

@@ -1,4 +1,3 @@
-from turtle import right
 import Piece, Enums, Board
 import pygame, os
 # not checkmate
@@ -238,6 +237,11 @@ def DiagonallyInvalids(piece, x, y, board):
                 if(board.cells[y+i][x+i].pieceInCell.color == piece.color):
                     break
                 else:
+                    if not (board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.QUEEN or
+                    board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.PAWN or
+                    board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.KING or
+                    board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.BISHOP):
+                        break
                     if(board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y+i][x+i].pieceInCell.type == Enums.PieceType.QUEEN):
                         piece.invalidMoves.append((y,x))
@@ -254,6 +258,11 @@ def DiagonallyInvalids(piece, x, y, board):
                 if(board.cells[y+i][x-i].pieceInCell.color == piece.color):
                     break
                 else:   
+                    if not (board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.QUEEN or
+                    board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.PAWN or
+                    board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.KING or
+                    board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.BISHOP):
+                        break
                     if(board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y+i][x-i].pieceInCell.type == Enums.PieceType.QUEEN):
                         piece.invalidMoves.append((y,x))
@@ -270,6 +279,11 @@ def DiagonallyInvalids(piece, x, y, board):
                 if(board.cells[y-i][x-i].pieceInCell.color == piece.color):
                     break
                 else:
+                    if not (board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.QUEEN or
+                    board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.PAWN or
+                    board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.KING or
+                    board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.BISHOP):
+                        break
                     if(board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y-i][x-i].pieceInCell.type == Enums.PieceType.QUEEN):
                         piece.invalidMoves.append((y,x))
@@ -286,6 +300,11 @@ def DiagonallyInvalids(piece, x, y, board):
                 if(board.cells[y-i][x+i].pieceInCell.color == piece.color):
                     break
                 else:
+                    if not (board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.QUEEN or
+                    board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.PAWN or
+                    board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.KING or
+                    board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.BISHOP):
+                        break
                     if(board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.BISHOP or
                        board.cells[y-i][x+i].pieceInCell.type == Enums.PieceType.QUEEN):
                         piece.invalidMoves.append((y,x))
@@ -377,4 +396,3 @@ def GetCheckMates(piece, x, y, board):
         VerticallyInvalids(piece, x-1, y+1, board)
         DiagonallyInvalids(piece, x-1, y+1, board)
         HorizontalliInvalids(piece, x-1, y+1, board)
-

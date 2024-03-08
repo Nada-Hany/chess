@@ -155,7 +155,6 @@ class board:
         CheckForCastleMoves(self.selectedPiece, x, y, self.cells)
         if(piece.type == Enums.PieceType.KING):
             GetCheckMates(piece, x, y, self)    
-        
             
     def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
@@ -168,7 +167,6 @@ class board:
                 if len(self.selectedPiece.invalidMoves) == 0:
                     self.DrawMove(window, cell.x, cell.y)
                 else:
-                    print(self.selectedPiece.invalidMoves)
                     for move in self.selectedPiece.invalidMoves:
                         if ((move[0] == ((cell.y - self.yOffset) // self.tileSize) and
                                 move[1] == (cell.x - self.xOffset) // self.tileSize)):

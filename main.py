@@ -1,5 +1,4 @@
-import pygame
-import Board, Enums
+import pygame, Board
 from game_events import *
 from move_logic import *
 
@@ -45,7 +44,3 @@ while running:
       DrawPlayerTurn(WINDOW, WIDTH, board_obj.whiteTurn)
    pygame.display.flip()
   
-
-         
-
-   
