@@ -155,6 +155,7 @@ class board:
         CheckForCastleMoves(self.selectedPiece, x, y, self.cells)
         if(piece.type == Enums.PieceType.KING):
             GetCheckMates(piece, x, y, self)    
+        
             
     def DrawPieces(self,window, pngOffsets):
         for cell in self.cells:
@@ -163,13 +164,17 @@ class board:
                   eachCell.DrawPiece(window, pngOffsets)
         if(self.selectedPiece != None):
             for cell in self.selectedPiece.possibleMoves:
+                found = False
                 if len(self.selectedPiece.invalidMoves) == 0:
                     self.DrawMove(window, cell.x, cell.y)
-                if(self.selectedPiece.type == Enums.PieceType.KING):
+                else:
+                    print(self.selectedPiece.invalidMoves)
                     for move in self.selectedPiece.invalidMoves:
-                        if not ((move[0] == ((cell.y - self.yOffset) // self.tileSize) and
-                                 move[1] ==  (cell.x - self.xOffset) // self.tileSize)):
-                            self.DrawMove(window, cell.x, cell.y)
+                        if ((move[0] == ((cell.y - self.yOffset) // self.tileSize) and
+                                move[1] == (cell.x - self.xOffset) // self.tileSize)):
+                            found = True
+                    if not found:
+                         self.DrawMove(window, cell.x, cell.y)
 
     def DrawMove(self, window, x, y):
         pygame.draw.rect(window, (200, 0, 0), (x + 2, y + 2, 76, 76), 4)
@@ -212,28 +217,23 @@ class board:
                     for cell in self.selectedPiece.possibleMoves:
                             if (y == ((cell.y - self.yOffset)//self.tileSize)) and (x == ((cell.x - self.xOffset)//self.tileSize)):
                                 # move
-                                if(self.cells[y][x].pieceInCell == None):
-                                    if not (self.selectedPiece.type == Enums.PieceType.KING):
-                                        self.MovePiece(y, x)
-                                    else:
-                                        if(len(self.selectedPiece.invalidMoves) == 0):
-                                                    self.MovePiece(y, x)
-                                        else:
-                                            for move in self.selectedPiece.invalidMoves:
-                                                if not ((move[0] == ((cell.y - self.yOffset) // self.tileSize) and
-                                                    move[1] == (cell.x - self.xOffset) // self.tileSize)):
-                                                    print("in invalids->>    ",   move[0] , move[1])
-                                                    self.MovePiece(y, x)
-                                                    break
+                                canMove = True
+                                if(len(self.selectedPiece.invalidMoves) == 0):
+                                            self.MovePiece(y, x)
+                                else:
+                                    for move in self.selectedPiece.invalidMoves:
+                                        if (move[0] == y and move[1] == x):
+                                            canMove = False
+                                    if canMove:
+                                            self.MovePiece(y, x)
 
-   
     def MovePiece(self, y, x):
         self.cells[y][x].pieceInCell = self.selectedPiece
+        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         if(self.selectedPiece.type == Enums.PieceType.PAWN):
             CheckForPawnPromoption(self.selectedPiece, y, self)
         if self.pawnPromotion:
             self.pawnToBePromoted = self.selectedPiece
-        self.cells[self.selectedPiece.previousX][self.selectedPiece.previousY].pieceInCell = None
         CheckForPawnPromoption(self.selectedPiece, y, self)
         if(self.pawnPromotion):
             self.pawnInPromotion = self.selectedPiece

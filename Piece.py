@@ -1,4 +1,4 @@
-import Enums, os
+import Enums, os, pygame
 class piece:
 
     def __init__(self, color:Enums.Color, type, isAlive = True, isSelected = False, image = None):
